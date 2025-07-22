@@ -25,9 +25,19 @@ const UserSchema = new mongoose.Schema(
         "laboratório",
       ],
     },
+    crmNumber: {
+      type: String,
+    },
+    corenNumber: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
     password: {
       type: String,
       required: true,
+      select: false,
     },
   },
   { timestamps: true }

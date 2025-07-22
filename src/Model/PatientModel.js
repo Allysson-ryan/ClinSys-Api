@@ -14,7 +14,7 @@ const PacientSchema = new mongoose.Schema(
       trim: true,
     },
     cpf: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
     },
