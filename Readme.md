@@ -8,8 +8,10 @@ Este repositório corresponde ao **backend** da aplicação, responsável por to
 
 Mais detalhes e instruções serão adicionados neste README conforme o desenvolvimento avança.
 
+<br></br>
 # imagens do projeto:
-
 ![screenshot](src/assets/admin-page.jpeg)
+<br></br>
 ![screenshot](src/assets/doctor-pages.jpeg)
+<br></br>
 ![screenshot](src/assets/recepcao-page.jpeg)
