@@ -1,35 +1,37 @@
 import mongoose from "mongoose";
 
-const PrescriptionSchema = new mongoose.Schema(
+const thyroidFunctionSchema = new mongoose.Schema(
   {
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Pacient",
       required: true,
     },
-    doctor: {
+    requestedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    date: {
+    requestedAt: {
       type: Date,
-      required: true,
-    },
-    medicationName: {
-      type: String,
-      required: true,
     },
     status: {
       type: String,
+      default: true,
+    },
+    collectedAt: {
+      type: Date,
+    },
+    tsh: {
+      type: Number,
       required: true,
     },
-    reason: {
-      type: String,
+    t3: {
+      type: Number,
       required: true,
     },
-    purpose: {
-      type: String,
+    t4: {
+      type: Number,
       required: true,
     },
     observation: {
@@ -39,4 +41,7 @@ const PrescriptionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Prescription = mongoose.model("Prescription", PrescriptionSchema);
+export const ThyroidFunction = mongoose.model(
+  "ThyroidFunction",
+  thyroidFunctionSchema
+);

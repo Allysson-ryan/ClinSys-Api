@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const PrescriptionSchema = new mongoose.Schema(
+const notesMedicalRecordSchema = new mongoose.Schema(
   {
     patient: {
       type: mongoose.Schema.Types.ObjectId,
@@ -16,22 +16,6 @@ const PrescriptionSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    medicationName: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: String,
-      required: true,
-    },
-    reason: {
-      type: String,
-      required: true,
-    },
-    purpose: {
-      type: String,
-      required: true,
-    },
     observation: {
       type: String,
     },
@@ -39,4 +23,7 @@ const PrescriptionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Prescription = mongoose.model("Prescription", PrescriptionSchema);
+export const notesMedicalRecord = mongoose.model(
+  "notesMedicalRecord",
+  notesMedicalRecordSchema
+);

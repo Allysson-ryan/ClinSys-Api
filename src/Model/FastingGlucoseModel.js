@@ -1,35 +1,29 @@
 import mongoose from "mongoose";
 
-const PrescriptionSchema = new mongoose.Schema(
+const fastingGlucoseSchema = new mongoose.Schema(
   {
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Pacient",
       required: true,
     },
-    doctor: {
+    requestedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    date: {
+    requestedAt: {
       type: Date,
-      required: true,
-    },
-    medicationName: {
-      type: String,
-      required: true,
     },
     status: {
       type: String,
-      required: true,
+      default: true,
     },
-    reason: {
-      type: String,
-      required: true,
+    collectedAt: {
+      type: Date,
     },
-    purpose: {
-      type: String,
+    glucoseLevel: {
+      type: Number,
       required: true,
     },
     observation: {
@@ -39,4 +33,7 @@ const PrescriptionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Prescription = mongoose.model("Prescription", PrescriptionSchema);
+export const FastingGlucose = mongoose.model(
+  "FastingGlucose",
+  fastingGlucoseSchema
+);
