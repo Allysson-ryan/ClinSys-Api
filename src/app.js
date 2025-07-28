@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import routes from "./routes.js";
 import connectDB from "./Config/db.js";
+const errorHandler = require("./Middleware/errorHandlerMiddleware.js");
 
 dotenv.config();
 connectDB();
@@ -18,5 +19,7 @@ app.use(
 
 app.use(express.json());
 app.use("/", routes);
+
+app.use(errorHandler);
 
 export default app;
