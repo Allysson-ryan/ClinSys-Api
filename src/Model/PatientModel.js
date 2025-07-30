@@ -25,6 +25,10 @@ const PacientSchema = new mongoose.Schema(
     priority: {
       type: Boolean,
     },
+    role: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

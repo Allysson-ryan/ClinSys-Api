@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const UserSchema = new mongoose.Schema(
+const AdminSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -16,24 +16,6 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: [
-        "paciente",
-        "recepcionista",
-        "medico",
-        "enfermeiro",
-        "admin",
-        "laboratório",
-      ],
-    },
-    crmNumber: {
-      type: String,
-    },
-    corenNumber: {
-      type: String,
-    },
-    state: {
-      type: String,
-      required: true,
     },
     password: {
       type: String,
@@ -44,4 +26,4 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const User = mongoose.model("User", UserSchema);
+export const Admin = mongoose.model("Admin", AdminSchema);

@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
-const User = require("../Model/UserModel");
+const { Admin } = require("../Model/AdminModel");
+const { Pacient } = require("../Model/PatientModel");
+const { Employee } = require("../Model/EmployeeModel");
 
 module.exports = async function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -14,20 +16,30 @@ module.exports = async function authMiddleware(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
 
-    if (!user || user.isActive === false) {
-      return res.status(403).json({ error: "Acesso negado." });
+    const [admin, pacient, employee] = await Promise.all([
+      Admin.findById(decoded.id),
+      Pacient.findById(decoded.id),
+      Employee.findById(decoded.id),
+    ]);
+
+    const user = admin || pacient || employee;
+
+    if (!user) {
+      return res
+        .status(403)
+        .json({ error: "Usuário não encontrado ou acesso negado." });
     }
 
     req.user = {
       id: user._id,
       name: user.name,
       role: user.role,
+      type: admin ? "admin" : pacient ? "pacient" : "employee",
     };
 
     next();
   } catch (err) {
-    return res.status(401).json({ error: "Token inválido." });
+    return res.status(401).json({ error: "Token inválido ou expirado." });
   }
 };
