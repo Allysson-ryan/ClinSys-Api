@@ -1,8 +1,8 @@
-import adminAuthService from "../Service/adminAuthService";
+import adminService from "../service/adminService.js";
 
 export const registerAdmin = async (req, res, next) => {
   try {
-    const data = await adminAuthService.register(req.body);
+    const data = await adminService.register(req.body);
     res.status(201).json(data);
   } catch (error) {
     next(error);
@@ -11,7 +11,7 @@ export const registerAdmin = async (req, res, next) => {
 
 export const loginAdmin = async (req, res, next) => {
   try {
-    const data = await adminAuthService.login(req.body);
+    const data = await adminService.login(req.body);
     res.status(200).json(data);
   } catch (error) {
     next(error);

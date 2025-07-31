@@ -1,6 +1,6 @@
-const PacientService = require("../Service/pacientAuthService");
+import PacientService from "../service/PacientService.js";
 
-exports.createPacient = async (req, res, next) => {
+export const createPacient = async (req, res, next) => {
   try {
     const pacient = await PacientService.create(req.body);
     res.status(201).json(pacient);
@@ -9,7 +9,7 @@ exports.createPacient = async (req, res, next) => {
   }
 };
 
-exports.loginPacient = async (req, res, next) => {
+export const loginPacient = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const token = await PacientService.login(email, password);
@@ -19,7 +19,7 @@ exports.loginPacient = async (req, res, next) => {
   }
 };
 
-exports.getAllPacients = async (req, res, next) => {
+export const getAllPacients = async (req, res, next) => {
   try {
     const pacients = await PacientService.findAll();
     res.status(200).json(pacients);
@@ -28,7 +28,7 @@ exports.getAllPacients = async (req, res, next) => {
   }
 };
 
-exports.getPacientById = async (req, res, next) => {
+export const getPacientById = async (req, res, next) => {
   try {
     const pacient = await PacientService.findById(req.params.id);
     if (!pacient) {
@@ -40,7 +40,7 @@ exports.getPacientById = async (req, res, next) => {
   }
 };
 
-exports.updatePacient = async (req, res, next) => {
+export const updatePacient = async (req, res, next) => {
   try {
     const updated = await PacientService.update(req.params.id, req.body);
     if (!updated) {

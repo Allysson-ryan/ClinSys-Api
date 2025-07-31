@@ -1,9 +1,9 @@
-const jwt = require("jsonwebtoken");
-const { Admin } = require("../Model/AdminModel");
-const { Pacient } = require("../Model/PatientModel");
-const { Employee } = require("../Model/EmployeeModel");
+import jwt from "jsonwebtoken";
+import { Admin } from "../Model/AdminModel.js";
+import { Pacient } from "../Model/PatientModel.js";
+import { Employee } from "../Model/EmployeeModel.js";
 
-module.exports = async function authMiddleware(req, res, next) {
+export default async function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -42,4 +42,4 @@ module.exports = async function authMiddleware(req, res, next) {
   } catch (err) {
     return res.status(401).json({ error: "Token inválido ou expirado." });
   }
-};
+}

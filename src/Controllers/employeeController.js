@@ -1,4 +1,4 @@
-import employeeAuthService from "../Service/employeeAuthService";
+import employeeAuthService from "../service/employeeService.js";
 
 export const registerEmployee = async (req, res, next) => {
   try {

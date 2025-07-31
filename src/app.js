@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import routes from "./routes.js";
 import connectDB from "./Config/db.js";
-const errorHandler = require("./Middleware/errorHandlerMiddleware.js");
+import errorHandler from "./Middleware/errorHandlerMiddleware.js";
 
 dotenv.config();
 connectDB();

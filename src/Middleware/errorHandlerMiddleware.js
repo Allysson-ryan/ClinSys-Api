@@ -1,4 +1,4 @@
-module.exports = function errorHandler(err, req, res, next) {
+export default function errorHandler(err, req, res, next) {
   const statusCode = err.statusCode || 500;
 
   res.status(statusCode).json({
@@ -6,4 +6,4 @@ module.exports = function errorHandler(err, req, res, next) {
     error: err.message || "Erro interno do servidor.",
     ...(err.errors && { details: err.errors }),
   });
-};
+}
