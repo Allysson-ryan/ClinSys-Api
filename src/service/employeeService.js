@@ -1,15 +1,34 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Employee } from "../Model/EmployeeModel.js";
+import mongoose from "mongoose";
 
 const generateToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
 export default {
-  async register({ name, email, password, role }) {
+  async register({
+    name,
+    email,
+    password,
+    role,
+    crmNumber,
+    corenNumber,
+    state,
+  }) {
     const employeeExists = await Employee.findOne({ email });
     if (employeeExists) throw new Error("Funcionário já cadastrado.");
+
+    if (role === "Médico" && crmNumber) {
+      const crmExists = await Employee.findOne({ crmNumber });
+      if (crmExists) throw new Error("crm já Cadastrado");
+    }
+
+    if (role === "Enfermeiro" && corenNumber) {
+      const crmExists = await Employee.findOne({ corenNumber });
+      if (crmExists) throw new Error("Coren já Cadastrado");
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -18,6 +37,9 @@ export default {
       email,
       password: hashedPassword,
       role,
+      crmNumber,
+      corenNumber,
+      state,
     });
 
     return {
@@ -26,12 +48,13 @@ export default {
         name: newEmployee.name,
         email: newEmployee.email,
         role: newEmployee.role,
+        state: newEmployee.state,
       },
     };
   },
 
   async login({ email, password }) {
-    const employee = await Employee.findOne({ email });
+    const employee = await Employee.findOne({ email }).select("+password");
     if (!employee) throw new Error("Funcionário não encontrado.");
 
     const isPasswordValid = await bcrypt.compare(password, employee.password);
@@ -45,8 +68,41 @@ export default {
         name: employee.name,
         email: employee.email,
         role: employee.role,
+        state: employee.state,
       },
       token,
     };
+  },
+
+  async getAll() {
+    const employees = await Employee.find().select("-password");
+    return employees;
+  },
+
+  async getById(id) {
+    if (!mongoose.Types.ObjectId.isValid(id)) throw new Error("ID inválido.");
+    const employee = await Employee.findById(id).select("-password");
+    if (!employee) throw new Error("Funcionário não encontrado.");
+    return employee;
+  },
+
+  async update(id, updates) {
+    if (!mongoose.Types.ObjectId.isValid(id)) throw new Error("ID inválido.");
+    if (updates.password) {
+      updates.password = await bcrypt.hash(updates.password, 10);
+    }
+    const updated = await Employee.findByIdAndUpdate(id, updates, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
+    if (!updated) throw new Error("Funcionário não encontrado.");
+    return updated;
+  },
+
+  async remove(id) {
+    if (!mongoose.Types.ObjectId.isValid(id)) throw new Error("ID inválido.");
+    const deleted = await Employee.findByIdAndDelete(id);
+    if (!deleted) throw new Error("Funcionário não encontrado.");
   },
 };

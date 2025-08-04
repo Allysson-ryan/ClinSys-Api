@@ -3,7 +3,8 @@ import bcrypt from "bcryptjs";
 import { Admin } from "../Model/AdminModel.js";
 
 const generateToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET não configurado.");
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
 export default {
@@ -31,7 +32,7 @@ export default {
   },
 
   async loginAdmin({ email, password }) {
-    const admin = await Admin.findOne({ email });
+    const admin = await Admin.findOne({ email }).select("+password");
     if (!admin) throw new Error("Admin não encontrado.");
 
     const isPasswordValid = await bcrypt.compare(password, admin.password);
@@ -48,5 +49,29 @@ export default {
       },
       token,
     };
+  },
+
+  async findAll() {
+    return await Admin.find();
+  },
+
+  async updateAdmin(id, data) {
+    const updates = { ...data };
+
+    if (data.password) {
+      updates.password = await bcrypt.hash(data.password, 10);
+    }
+
+    const updatedAdmin = await Admin.findByIdAndUpdate(id, updates, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
+    return updatedAdmin;
+  },
+
+  async deleteAdmin(id) {
+    const deleted = await Admin.findByIdAndDelete(id);
+    return deleted;
   },
 };

@@ -16,13 +16,14 @@ const EmployeeSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["recepcionista", "medico", "enfermeiro", "laboratório"],
     },
     crmNumber: {
       type: String,
+      unique: true,
     },
     corenNumber: {
       type: String,
+      unique: true,
     },
     state: {
       type: String,
