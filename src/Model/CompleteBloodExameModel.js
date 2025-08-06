@@ -9,7 +9,7 @@ const completeBloodExameSchema = new mongoose.Schema(
     },
     requestedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Employee",
       required: true,
     },
     requestedAt: {

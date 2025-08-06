@@ -4,7 +4,7 @@ const workScheduleSchema = new mongoose.Schema(
   {
     funcionario: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Employee",
       required: true,
     },
     diaSemana: {

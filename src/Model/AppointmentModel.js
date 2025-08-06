@@ -21,11 +21,15 @@ const AppointmentSchema = new mongoose.Schema(
     },
     hour: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "schedulingTime",
+      ref: "AvailableHoursConsultation",
       required: true,
     },
     annotation: {
       type: String,
+    },
+    status: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

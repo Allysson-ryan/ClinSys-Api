@@ -25,7 +25,7 @@ const EmployeeSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
-    state: {
+    status: {
       type: String,
       required: true,
     },

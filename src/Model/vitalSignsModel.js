@@ -9,7 +9,7 @@ const medicalHistorySchema = new mongoose.Schema(
     },
     nurseName: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Employee",
       required: true,
     },
     date: {

@@ -24,3 +24,26 @@ export function authorizeSelfOrAdmin(targetType) {
     return res.status(403).json({ error: "Acesso negado." });
   };
 }
+
+export function authorizeAppointmentAccess() {
+  return (req, res, next) => {
+    const { id: userId, type } = req.user;
+
+    if (type === "employee") return next();
+
+    if (type === "pacient") {
+      const pacientId =
+        req.method === "GET" ? req.params.id : req.body.pacientName;
+
+      if (pacientId === userId) return next();
+
+      return res.status(403).json({
+        error: "Pacientes só podem acessar suas próprias consultas.",
+      });
+    }
+
+    return res.status(403).json({
+      error: "Admins não têm permissão para esse recurso.",
+    });
+  };
+}

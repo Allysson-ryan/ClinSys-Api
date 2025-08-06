@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-const schedulingTimeSchema = new mongoose.Schema(
+const AvailableHoursConsultationSchema = new mongoose.Schema(
   {
     doctor: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Employee",
       required: true,
     },
     hour: {
@@ -19,7 +19,7 @@ const schedulingTimeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const schedulingTime = mongoose.model(
-  "schedulingTime",
-  schedulingTimeSchema
+export const AvailableHoursConsultation = mongoose.model(
+  "AvailableHoursConsultation",
+  AvailableHoursConsultationSchema
 );
