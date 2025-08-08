@@ -17,6 +17,10 @@ const EmployeeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    position: {
+      type: String,
+      required: true,
+    },
     crmNumber: {
       type: String,
       unique: true,

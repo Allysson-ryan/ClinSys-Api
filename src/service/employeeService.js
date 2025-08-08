@@ -13,19 +13,20 @@ export default {
     email,
     password,
     role,
+    position,
     crmNumber,
     corenNumber,
-    state,
+    status,
   }) {
     const employeeExists = await Employee.findOne({ email });
     if (employeeExists) throw new Error("Funcionário já cadastrado.");
 
-    if (role === "Médico" && crmNumber) {
+    if (position === "Médico" && crmNumber) {
       const crmExists = await Employee.findOne({ crmNumber });
       if (crmExists) throw new Error("crm já Cadastrado");
     }
 
-    if (role === "Enfermeiro" && corenNumber) {
+    if (position === "Enfermeiro" && corenNumber) {
       const crmExists = await Employee.findOne({ corenNumber });
       if (crmExists) throw new Error("Coren já Cadastrado");
     }
@@ -37,9 +38,10 @@ export default {
       email,
       password: hashedPassword,
       role,
+      position,
       crmNumber,
       corenNumber,
-      state,
+      status,
     });
 
     return {
@@ -48,7 +50,8 @@ export default {
         name: newEmployee.name,
         email: newEmployee.email,
         role: newEmployee.role,
-        state: newEmployee.state,
+        position: newEmployee.position,
+        status: newEmployee.status,
       },
     };
   },
@@ -68,7 +71,8 @@ export default {
         name: employee.name,
         email: employee.email,
         role: employee.role,
-        state: employee.state,
+        position: employee.position,
+        status: employee.status,
       },
       token,
     };

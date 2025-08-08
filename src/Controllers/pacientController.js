@@ -5,6 +5,11 @@ export const createPacient = async (req, res, next) => {
     const pacient = await PacientService.create(req.body);
     res.status(201).json(pacient);
   } catch (err) {
+    if (err.statusCode) {
+      return res
+        .status(err.statusCode)
+        .json({ success: false, error: err.message });
+    }
     next(err);
   }
 };

@@ -8,7 +8,7 @@ const workScheduleSchema = new mongoose.Schema(
       required: true,
     },
     diaSemana: {
-      type: String,
+      type: Date,
       required: true,
     },
     horaInicio: {

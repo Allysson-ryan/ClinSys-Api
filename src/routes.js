@@ -36,6 +36,13 @@ import {
   updateAvailableHour,
   deleteAvailableHour,
 } from "./Controllers/availableHoursConsultationController.js";
+import {
+  createWorkSchedule,
+  getAllWorkSchedules,
+  getWorkScheduleById,
+  updateWorkSchedule,
+  deleteWorkSchedule,
+} from "./Controllers/workScheduleController.js";
 import authMiddleware from "./Middleware/authMiddleware.js";
 import validateRequest from "./Middleware/validateRequestMiddleware.js";
 import { authorizeSelfOrAdmin } from "./Middleware/authorizationMiddleware.js";
@@ -158,6 +165,31 @@ router.delete(
   authMiddleware,
   authorizeSelfOrAdmin("admin"),
   deleteAvailableHour
+);
+
+router.post(
+  "/cronograma-trabalho",
+  authMiddleware,
+  authorizeSelfOrAdmin("admin"),
+  createWorkSchedule
+);
+
+router.get("/cronograma-trabalho", authMiddleware, getAllWorkSchedules);
+
+router.get("/cronograma-trabalho/:id", authMiddleware, getWorkScheduleById);
+
+router.patch(
+  "/cronograma-trabalho/:id",
+  authMiddleware,
+  authorizeSelfOrAdmin("admin"),
+  updateWorkSchedule
+);
+
+router.delete(
+  "/cronograma-trabalho/:id",
+  authMiddleware,
+  authorizeSelfOrAdmin("admin"),
+  deleteWorkSchedule
 );
 
 export default router;
