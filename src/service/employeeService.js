@@ -21,14 +21,14 @@ export default {
     const employeeExists = await Employee.findOne({ email });
     if (employeeExists) throw new Error("Funcionário já cadastrado.");
 
-    if (position === "Médico" && crmNumber) {
+    if (crmNumber && crmNumber.trim() !== "") {
       const crmExists = await Employee.findOne({ crmNumber });
-      if (crmExists) throw new Error("crm já Cadastrado");
+      if (crmExists) throw new Error("CRM já cadastrado.");
     }
 
-    if (position === "Enfermeiro" && corenNumber) {
-      const crmExists = await Employee.findOne({ corenNumber });
-      if (crmExists) throw new Error("Coren já Cadastrado");
+    if (corenNumber && corenNumber.trim() !== "") {
+      const corenExists = await Employee.findOne({ corenNumber });
+      if (corenExists) throw new Error("Coren já cadastrado.");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -39,8 +39,8 @@ export default {
       password: hashedPassword,
       role,
       position,
-      crmNumber,
-      corenNumber,
+      crmNumber: crmNumber || null,
+      corenNumber: corenNumber || null,
       status,
     });
 

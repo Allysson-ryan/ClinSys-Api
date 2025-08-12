@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const medicalHistorySchema = new mongoose.Schema(
+const vitalSignsSchema = new mongoose.Schema(
   {
     patient: {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,7 +40,4 @@ const medicalHistorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const medicalHistory = mongoose.model(
-  "medicalHistory",
-  medicalHistorySchema
-);
+export const vitalSigns = mongoose.model("vitalSigns", vitalSignsSchema);

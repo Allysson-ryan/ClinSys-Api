@@ -43,6 +43,12 @@ import {
   updateWorkSchedule,
   deleteWorkSchedule,
 } from "./Controllers/workScheduleController.js";
+import {
+  createVitalSign,
+  getAllVitalSigns,
+  getVitalSignById,
+  updateVitalSign,
+} from "./Controllers/vitalSignsController.js";
 import authMiddleware from "./Middleware/authMiddleware.js";
 import validateRequest from "./Middleware/validateRequestMiddleware.js";
 import { authorizeSelfOrAdmin } from "./Middleware/authorizationMiddleware.js";
@@ -91,6 +97,7 @@ router.delete(
   deleteAdmin
 );
 
+//----Funcionários----
 router.get("/funcionario", authMiddleware, getAllEmployees);
 router.get(
   "/funcionario/:id",
@@ -111,6 +118,7 @@ router.delete(
   deleteEmployee
 );
 
+//----Marcar Consultas----
 router.post(
   "/appointments",
   authMiddleware,
@@ -146,6 +154,7 @@ router.patch(
   updateAppointment
 );
 
+//----Horários disponíveis para marcar consultas----
 router.post(
   "/horarios",
   authMiddleware,
@@ -167,6 +176,7 @@ router.delete(
   deleteAvailableHour
 );
 
+//----Cronograma de trabalho----
 router.post(
   "/cronograma-trabalho",
   authMiddleware,
@@ -190,6 +200,35 @@ router.delete(
   authMiddleware,
   authorizeSelfOrAdmin("admin"),
   deleteWorkSchedule
+);
+
+//----Sinais vitais do paciente----
+router.post(
+  "/sinais-vitais",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  createVitalSign
+);
+
+router.get(
+  "/sinais-vitais",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getAllVitalSigns
+);
+
+router.get(
+  "/sinais-vitais/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getVitalSignById
+);
+
+router.patch(
+  "/sinais-vitais/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  updateVitalSign
 );
 
 export default router;

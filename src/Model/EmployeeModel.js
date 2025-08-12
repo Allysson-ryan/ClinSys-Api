@@ -23,11 +23,9 @@ const EmployeeSchema = new mongoose.Schema(
     },
     crmNumber: {
       type: String,
-      unique: true,
     },
     corenNumber: {
       type: String,
-      unique: true,
     },
     status: {
       type: String,
