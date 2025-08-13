@@ -18,19 +18,26 @@ export const getAllVitalSigns = async (req, res) => {
   }
 };
 
-export const getVitalSignById = async (req, res, next) => {
+export const getVitalSignsByPatientId = async (req, res) => {
   try {
-    const vitalSign = await vitalSignsService.getVitalSignById(req.params.id);
+    const patientId = req.params.id;
 
-    if (!vitalSign || vitalSign.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Nenhuma consulta encontrada para este paciente" });
+    const vitalSignsList = await vitalSignsService.getVitalSignsByPatientId(
+      patientId
+    );
+
+    if (!vitalSignsList || vitalSignsList.length === 0) {
+      return res.status(404).json({
+        message: "Nenhum sinal vital encontrado para este paciente",
+      });
     }
 
-    res.status(200).json(vitalSign);
+    res.status(200).json(vitalSignsList);
   } catch (error) {
-    res.status(500).json({ message: "Erro ao buscar sinal vital", error });
+    res.status(500).json({
+      message: "Erro ao buscar sinais vitais do paciente",
+      error: error.message,
+    });
   }
 };
 

@@ -38,7 +38,7 @@ export function authorizeAppointmentAccess() {
       if (pacientId === userId) return next();
 
       return res.status(403).json({
-        error: "Pacientes só podem acessar suas próprias consultas.",
+        error: "Pacientes só podem acessar seus próprias dados.",
       });
     }
 

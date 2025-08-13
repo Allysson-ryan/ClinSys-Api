@@ -46,9 +46,23 @@ import {
 import {
   createVitalSign,
   getAllVitalSigns,
-  getVitalSignById,
+  getVitalSignsByPatientId,
   updateVitalSign,
 } from "./Controllers/vitalSignsController.js";
+import {
+  createMedicalHistory,
+  getAllMedicalHistory,
+  updateMedicalHistory,
+  deleteMedicalHistory,
+  getMedicalHistoryByPatientId,
+} from "./Controllers/medicalHistoryController.js";
+import {
+  createNotesMedicalRecord,
+  deleteNotesMedicalRecord,
+  getAllNotesMedicalRecord,
+  getNotesMedicalRecordByPatientId,
+  updateNotesMedicalRecord,
+} from "./Controllers/notesMedicalRecordController.js";
 import authMiddleware from "./Middleware/authMiddleware.js";
 import validateRequest from "./Middleware/validateRequestMiddleware.js";
 import { authorizeSelfOrAdmin } from "./Middleware/authorizationMiddleware.js";
@@ -221,7 +235,7 @@ router.get(
   "/sinais-vitais/:id",
   authMiddleware,
   authorizeAppointmentAccess(),
-  getVitalSignById
+  getVitalSignsByPatientId
 );
 
 router.patch(
@@ -229,6 +243,78 @@ router.patch(
   authMiddleware,
   authorizeAppointmentAccess(),
   updateVitalSign
+);
+
+//----Histórico Médico----
+router.post(
+  "/historico-medico",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  createMedicalHistory
+);
+
+router.get(
+  "/historico-medico",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getAllMedicalHistory
+);
+
+router.get(
+  "/historico-medico/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getMedicalHistoryByPatientId
+);
+
+router.patch(
+  "/historico-medico/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  updateMedicalHistory
+);
+
+router.delete(
+  "/historico-medico/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  deleteMedicalHistory
+);
+
+//----Anotações Médicas----
+router.post(
+  "/anotacoes-medicas",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  createNotesMedicalRecord
+);
+
+router.get(
+  "/anotacoes-medicas",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getAllNotesMedicalRecord
+);
+
+router.get(
+  "/anotacoes-medicas/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getNotesMedicalRecordByPatientId
+);
+
+router.patch(
+  "/anotacoes-medicas/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  updateNotesMedicalRecord
+);
+
+router.delete(
+  "/anotacoes-medicas/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  deleteNotesMedicalRecord
 );
 
 export default router;

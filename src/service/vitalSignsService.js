@@ -10,14 +10,18 @@ export const getAllVitalSigns = async () => {
   return await vitalSigns
     .find()
     .populate("patient", "name cpf")
-    .populate("nurseName", "name");
+    .populate("nurseName", "name role");
 };
 
-export const getVitalSignById = async (id) => {
+export const getVitalSignsByPatientId = async (patientId) => {
+  if (!mongoose.Types.ObjectId.isValid(patientId)) {
+    throw new Error("ID de paciente inválido");
+  }
+
   return await vitalSigns
-    .findById(id)
+    .find({ patient: patientId })
     .populate("patient", "name cpf")
-    .populate("nurseName", "name");
+    .populate("nurseName", "name role");
 };
 
 export const updateVitalSign = async (id, data) => {
