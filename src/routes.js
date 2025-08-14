@@ -45,13 +45,13 @@ import {
 } from "./Controllers/workScheduleController.js";
 import {
   createVitalSign,
-  getAllVitalSigns,
+  getVitalSignById,
   getVitalSignsByPatientId,
   updateVitalSign,
 } from "./Controllers/vitalSignsController.js";
 import {
   createMedicalHistory,
-  getAllMedicalHistory,
+  getMedicalHistoryById,
   updateMedicalHistory,
   deleteMedicalHistory,
   getMedicalHistoryByPatientId,
@@ -63,6 +63,19 @@ import {
   getNotesMedicalRecordByPatientId,
   updateNotesMedicalRecord,
 } from "./Controllers/notesMedicalRecordController.js";
+import {
+  createAllergiesMedicalRecord,
+  deleteAllergiesMedicalRecord,
+  getAllergiesMedicalRecordByPatientId,
+  updateAllergiesMedicalRecord,
+} from "./Controllers/allergiesMedicalRecordController.js";
+import {
+  createMedicalPrescription,
+  deleteMedicalPrescription,
+  getMedicalPrescriptionById,
+  getMedicalPrescriptionByPatientId,
+  updateMedicalPrescription,
+} from "./Controllers/PrescriptionController.js";
 import authMiddleware from "./Middleware/authMiddleware.js";
 import validateRequest from "./Middleware/validateRequestMiddleware.js";
 import { authorizeSelfOrAdmin } from "./Middleware/authorizationMiddleware.js";
@@ -225,14 +238,14 @@ router.post(
 );
 
 router.get(
-  "/sinais-vitais",
+  "/sinais-vitais/:id",
   authMiddleware,
   authorizeAppointmentAccess(),
-  getAllVitalSigns
+  getVitalSignById
 );
 
 router.get(
-  "/sinais-vitais/:id",
+  "/sinais-vitais/paciente/:id",
   authMiddleware,
   authorizeAppointmentAccess(),
   getVitalSignsByPatientId
@@ -254,14 +267,14 @@ router.post(
 );
 
 router.get(
-  "/historico-medico",
+  "/historico-medico/:id",
   authMiddleware,
   authorizeAppointmentAccess(),
-  getAllMedicalHistory
+  getMedicalHistoryById
 );
 
 router.get(
-  "/historico-medico/:id",
+  "/historico-medico/paciente/:id",
   authMiddleware,
   authorizeAppointmentAccess(),
   getMedicalHistoryByPatientId
@@ -315,6 +328,71 @@ router.delete(
   authMiddleware,
   authorizeAppointmentAccess(),
   deleteNotesMedicalRecord
+);
+
+//----Alergias----
+router.post(
+  "/alergias",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  createAllergiesMedicalRecord
+);
+
+router.get(
+  "/alergias/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getAllergiesMedicalRecordByPatientId
+);
+
+router.patch(
+  "/alergias/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  updateAllergiesMedicalRecord
+);
+
+router.delete(
+  "/alergias/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  deleteAllergiesMedicalRecord
+);
+
+//----Prescrição Médica----
+router.post(
+  "/prescricao",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  createMedicalPrescription
+);
+
+router.get(
+  "/prescricao/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getMedicalPrescriptionById
+);
+
+router.get(
+  "/prescricao/paciente/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getMedicalPrescriptionByPatientId
+);
+
+router.patch(
+  "/prescricao/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  updateMedicalPrescription
+);
+
+router.delete(
+  "/prescricao/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  deleteMedicalPrescription
 );
 
 export default router;

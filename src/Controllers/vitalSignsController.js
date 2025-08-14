@@ -9,12 +9,18 @@ export const createVitalSign = async (req, res) => {
   }
 };
 
-export const getAllVitalSigns = async (req, res) => {
+export const getVitalSignById = async (req, res) => {
   try {
-    const vitalSigns = await vitalSignsService.getAllVitalSigns();
-    res.status(200).json(vitalSigns);
+    const { id } = req.params;
+    const vitalSign = await vitalSignsService.getVitalSignById(id);
+
+    if (!vitalSign) {
+      return res.status(404).json({ message: "Sinal vital não encontrado" });
+    }
+
+    res.status(200).json(vitalSign);
   } catch (error) {
-    res.status(500).json({ message: "Erro ao listar sinais vitais", error });
+    res.status(500).json({ message: "Erro ao buscar sinal vital", error });
   }
 };
 

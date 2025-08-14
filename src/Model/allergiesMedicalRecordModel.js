@@ -12,10 +12,6 @@ const allergiesMedicalRecordSchema = new mongoose.Schema(
       ref: "Employee",
       required: true,
     },
-    date: {
-      type: Date,
-      required: true,
-    },
     allergiesName: {
       type: String,
       required: true,

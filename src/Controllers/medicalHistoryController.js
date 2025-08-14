@@ -11,14 +11,22 @@ export const createMedicalHistory = async (req, res) => {
   }
 };
 
-export const getAllMedicalHistory = async (req, res) => {
+export const getMedicalHistoryById = async (req, res) => {
   try {
-    const medicalHistory = await medicalHistoryService.getAllMedicalHistory();
+    const { id } = req.params;
+    const medicalHistory = await medicalHistoryService.getMedicalHistoryById(
+      id
+    );
+
+    if (!medicalHistory) {
+      return res
+        .status(404)
+        .json({ message: "Histórico médico não encontrado" });
+    }
+
     res.status(200).json(medicalHistory);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erro ao listar o histórico médico", error });
+    res.status(500).json({ message: "Erro ao buscar histórico médico", error });
   }
 };
 

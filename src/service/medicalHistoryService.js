@@ -6,9 +6,9 @@ export const createMedicalHistory = async (data) => {
   return newMedicalHistory;
 };
 
-export const getAllMedicalHistory = async () => {
+export const getMedicalHistoryById = async (id) => {
   return await medicalHistory
-    .find()
+    .findById(id)
     .populate("patient", "name")
     .populate("doctor", "name role crmNumber");
 };

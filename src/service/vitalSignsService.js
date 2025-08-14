@@ -6,11 +6,11 @@ export const createVitalSign = async (data) => {
   return newVitalSign;
 };
 
-export const getAllVitalSigns = async () => {
+export const getVitalSignById = async (id) => {
   return await vitalSigns
-    .find()
-    .populate("patient", "name cpf")
-    .populate("nurseName", "name role");
+    .findById(id)
+    .populate("patient", "name")
+    .populate("nurseName", "name role crmNumber");
 };
 
 export const getVitalSignsByPatientId = async (patientId) => {
