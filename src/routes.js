@@ -76,6 +76,18 @@ import {
   getMedicalPrescriptionByPatientId,
   updateMedicalPrescription,
 } from "./Controllers/PrescriptionController.js";
+import {
+  createThyroidFunction,
+  getThyroidFunctionById,
+  getThyroidFunctionByPatientId,
+  updateThyroidFunction,
+} from "./Controllers/ThyroidFunctionController.js";
+import {
+  createCompleteBloodExame,
+  getCompleteBloodExameById,
+  getCompleteBloodExameByPatientId,
+  updateCompleteBloodExame,
+} from "./Controllers/CompleteBloodExameController.js";
 import authMiddleware from "./Middleware/authMiddleware.js";
 import validateRequest from "./Middleware/validateRequestMiddleware.js";
 import { authorizeSelfOrAdmin } from "./Middleware/authorizationMiddleware.js";
@@ -393,6 +405,64 @@ router.delete(
   authMiddleware,
   authorizeAppointmentAccess(),
   deleteMedicalPrescription
+);
+
+//----Exame de tireoide----
+router.post(
+  "/exame-tireoide",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  createThyroidFunction
+);
+
+router.get(
+  "/exame-tireoide/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getThyroidFunctionById
+);
+
+router.get(
+  "/exame-tireoide/paciente/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getThyroidFunctionByPatientId
+);
+
+router.patch(
+  "/exame-tireoide/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  updateThyroidFunction
+);
+
+//----Exame de sangue completo----
+router.post(
+  "/exame-sangue",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  createCompleteBloodExame
+);
+
+router.get(
+  "/exame-sangue/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getCompleteBloodExameById
+);
+
+router.get(
+  "/exame-sangue/paciente/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getCompleteBloodExameByPatientId
+);
+
+router.patch(
+  "/exame-sangue/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  updateCompleteBloodExame
 );
 
 export default router;
