@@ -12,6 +12,12 @@ export const getAllThyroidFunction = async () => {
     .populate("requestedBy", "name role crmNumber");
 };
 
+export const getThyroidFunctionById = async (id) => {
+  return await ThyroidFunction.findById(id)
+    .populate("patient", "name")
+    .populate("requestedBy", "name role crmNumber");
+};
+
 export const getThyroidFunctionByPatientId = async (patientId) => {
   if (!mongoose.Types.ObjectId.isValid(patientId)) {
     throw new Error("ID do paciente inválido");

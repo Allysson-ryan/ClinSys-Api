@@ -32,6 +32,10 @@ const PrescriptionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    modeOfUse: {
+      type: String,
+      required: true,
+    },
     observation: {
       type: String,
     },

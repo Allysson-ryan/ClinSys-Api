@@ -12,6 +12,12 @@ export const getAllCompleteBlood = async () => {
     .populate("requestedBy", "name role crmNumber");
 };
 
+export const getCompleteBloodById = async (id) => {
+  return await CompleteBloodExame.findById(id)
+    .populate("patient", "name")
+    .populate("requestedBy", "name role crmNumber");
+};
+
 export const getCompleteBloodByPatientId = async (patientId) => {
   if (!mongoose.Types.ObjectId.isValid(patientId)) {
     throw new Error("ID do paciente inválido");

@@ -10,11 +10,31 @@ export const createCompleteBloodExame = async (req, res) => {
   }
 };
 
+export const getAllCompleteBloodExame = async (req, res) => {
+  try {
+    const completeBloodExameList =
+      await CompleteBloodExameService.getAllCompleteBlood();
+
+    if (!completeBloodExameList || completeBloodExameList.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Nenhum exame de sangue encontrado" });
+    }
+
+    res.status(200).json(completeBloodExameList);
+  } catch (error) {
+    res.status(500).json({
+      message: "Erro ao buscar exames de sangue",
+      error: error.message,
+    });
+  }
+};
+
 export const getCompleteBloodExameById = async (req, res) => {
   try {
     const { id } = req.params;
     const CompleteBloodExame =
-      await CompleteBloodExameService.getAllCompleteBlood(id);
+      await CompleteBloodExameService.getCompleteBloodById(id);
 
     if (!CompleteBloodExame) {
       return res

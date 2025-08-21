@@ -78,16 +78,33 @@ import {
 } from "./Controllers/PrescriptionController.js";
 import {
   createThyroidFunction,
+  getAllThyroidFunction,
   getThyroidFunctionById,
   getThyroidFunctionByPatientId,
   updateThyroidFunction,
 } from "./Controllers/ThyroidFunctionController.js";
 import {
   createCompleteBloodExame,
+  getAllCompleteBloodExame,
   getCompleteBloodExameById,
   getCompleteBloodExameByPatientId,
   updateCompleteBloodExame,
 } from "./Controllers/CompleteBloodExameController.js";
+import {
+  createFastingGlucose,
+  getAllFastingGlucose,
+  getFastingGlucoseById,
+  getFastingGlucoseByPatientId,
+  updateFastingGlucose,
+} from "./Controllers/FastingGlucoseController.js";
+import {
+  createMessage,
+  getContacts,
+  getConversation,
+  updateMessage,
+  deleteMessage,
+  getAvailableContacts,
+} from "./Controllers/ChatMessageController.js";
 import authMiddleware from "./Middleware/authMiddleware.js";
 import validateRequest from "./Middleware/validateRequestMiddleware.js";
 import { authorizeSelfOrAdmin } from "./Middleware/authorizationMiddleware.js";
@@ -416,6 +433,13 @@ router.post(
 );
 
 router.get(
+  "/exame-tireoide",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getAllThyroidFunction
+);
+
+router.get(
   "/exame-tireoide/:id",
   authMiddleware,
   authorizeAppointmentAccess(),
@@ -445,6 +469,13 @@ router.post(
 );
 
 router.get(
+  "/exame-sangue",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getAllCompleteBloodExame
+);
+
+router.get(
   "/exame-sangue/:id",
   authMiddleware,
   authorizeAppointmentAccess(),
@@ -465,14 +496,53 @@ router.patch(
   updateCompleteBloodExame
 );
 
+//----Exame de glicose----
+router.post(
+  "/exame-glicose",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  createFastingGlucose
+);
+
+router.get(
+  "/exame-glicose",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getAllFastingGlucose
+);
+
+router.get(
+  "/exame-glicose/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getFastingGlucoseById
+);
+
+router.get(
+  "/exame-glicose/paciente/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getFastingGlucoseByPatientId
+);
+
+router.patch(
+  "/exame-glicose/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  updateFastingGlucose
+);
+
+//----Chat----
+router.post("/chat/messages", authMiddleware, createMessage);
+
+router.get("/chat/contacts", authMiddleware, getContacts);
+
+router.get("/chat/available-contacts", authMiddleware, getAvailableContacts);
+
+router.get("/chat/conversation/:otherId", authMiddleware, getConversation);
+
+router.patch("/chat/messages/:id", authMiddleware, updateMessage);
+
+router.delete("/chat/messages/:id", authMiddleware, deleteMessage);
+
 export default router;
-
-//LEMBRETE:
-// authorizeSelfOrAdmin("pacient") —> bloqueia admin
-// authorizeSelfOrAdmin("employee") —> libera admin
-// authorizeSelfOrAdmin("admin") —> admin só pode editar a si mesmo
-
-// authorizeAppointmentAccess()
-// — employee → acesso total (criar, editar, listar qualquer consulta)
-// — pacient → acesso apenas às próprias consultas (via req.body.pacientName ou req.params.id)
-// — admin → acesso sempre negado

@@ -11,10 +11,30 @@ export const createThyroidFunction = async (req, res) => {
   }
 };
 
+export const getAllThyroidFunction = async (req, res) => {
+  try {
+    const ThyroidFunctionList =
+      await ThyroidFunctionService.getAllThyroidFunction();
+
+    if (!ThyroidFunctionList || ThyroidFunctionList.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Nenhum exame de tireoide encontrado" });
+    }
+
+    res.status(200).json(ThyroidFunctionList);
+  } catch (error) {
+    res.status(500).json({
+      message: "Erro ao buscar exames de tireoide",
+      error: error.message,
+    });
+  }
+};
+
 export const getThyroidFunctionById = async (req, res) => {
   try {
     const { id } = req.params;
-    const ThyroidFunction = await ThyroidFunctionService.getAllThyroidFunction(
+    const ThyroidFunction = await ThyroidFunctionService.getThyroidFunctionById(
       id
     );
 
