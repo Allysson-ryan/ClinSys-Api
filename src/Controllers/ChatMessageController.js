@@ -1,4 +1,6 @@
 import * as ChatMessageService from "../service/ChatMessageService.js";
+import { createNotification } from "../service/NotificationService.js";
+import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 
 export const createMessage = async (req, res) => {
   try {
@@ -7,6 +9,17 @@ export const createMessage = async (req, res) => {
       ...req.body,
       sender: employeeId,
     });
+
+    await createNotification(
+      "doctor",
+      DoctorNotificationTypes.CHAT_NEW_MESSAGE,
+      message.sender,
+      "Employee",
+      {
+        fromName: message.receiver.name,
+      }
+    );
+
     res.status(201).json(message);
   } catch (error) {
     res.status(400).json({ message: error.message });

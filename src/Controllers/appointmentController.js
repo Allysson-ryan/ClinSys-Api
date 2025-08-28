@@ -1,28 +1,16 @@
 import appointmentService from "../service/appointmentService.js";
 import { createNotification } from "../service/NotificationService.js";
 import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
-
-function isSameDayBrazil(dateA, dateB) {
-  const brasilOffset = -3 * 60;
-  const utcA = new Date(dateA.getTime() + dateA.getTimezoneOffset() * 60000);
-  const utcB = new Date(dateB.getTime() + dateB.getTimezoneOffset() * 60000);
-
-  const localA = new Date(utcA.getTime() + brasilOffset * 60000);
-  const localB = new Date(utcB.getTime() + brasilOffset * 60000);
-
-  return (
-    localA.getFullYear() === localB.getFullYear() &&
-    localA.getMonth() === localB.getMonth() &&
-    localA.getDate() === localB.getDate()
-  );
-}
+import { todayBrazilYYYYMMDD } from "../utils/date.js";
 
 export const createAppointment = async (req, res, next) => {
   try {
     const appointment = await appointmentService.create(req.body);
 
-    const now = new Date();
-    if (isSameDayBrazil(now, appointment.date)) {
+    const today = todayBrazilYYYYMMDD();
+    const appointmentDate = appointment.hour?.date;
+
+    if (appointmentDate && appointmentDate === today) {
       await createNotification(
         "doctor",
         DoctorNotificationTypes.NEW_PATIENT_TODAY,
@@ -79,25 +67,59 @@ export const getAppointmentsByPacientId = async (req, res, next) => {
   }
 };
 
+export const getAppointmentsByDoctorId = async (req, res, next) => {
+  try {
+    const doctorId = req.params.id;
+    const appointments = await appointmentService.findByDoctorId(doctorId);
+
+    if (!appointments || appointments.length === 0) {
+      return res.status(404).json({
+        message: "Nenhuma consulta encontrada para este profissional",
+      });
+    }
+
+    res.status(200).json(appointments);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const updateAppointment = async (req, res, next) => {
   try {
     const updated = await appointmentService.update(req.params.id, req.body);
+
     const statusNotificationMap = {
-      Cancelada: DoctorNotificationTypes.APPOINTMENT_CANCELED,
-      "Não Compareceu": DoctorNotificationTypes.APPOINTMENT_NO_SHOW,
+      Cancelada: {
+        type: DoctorNotificationTypes.APPOINTMENT_CANCELED,
+        getPayload: (appt) => ({
+          patientName: appt.pacientName.name,
+        }),
+      },
+      "Não Compareceu": {
+        type: DoctorNotificationTypes.APPOINTMENT_NO_SHOW,
+        getPayload: (appt) => ({
+          patientName: appt.pacientName.name,
+        }),
+      },
+      Remarcado: {
+        type: DoctorNotificationTypes.SCHEDULE_CHANGED,
+        getPayload: (appt) => ({
+          patientName: appt.pacientName.name,
+          date: appt.hour.date,
+          time: appt.hour?.hour,
+        }),
+      },
     };
 
-    const notificationType = statusNotificationMap[updated.status];
+    const notificationConfig = statusNotificationMap[updated.status];
 
-    if (notificationType) {
+    if (notificationConfig) {
       await createNotification(
         "doctor",
-        notificationType,
+        notificationConfig.type,
         updated.doctor,
         "Employee",
-        {
-          patientName: updated.pacientName.name,
-        }
+        notificationConfig.getPayload(updated)
       );
     }
 

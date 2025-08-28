@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const DoctorNotificationTypes = Object.freeze({
   EXAM_REQUESTED: "EXAM_REQUESTED",
   EXAM_RESULT_AVAILABLE: "EXAM_RESULT_AVAILABLE",
@@ -7,6 +9,7 @@ export const DoctorNotificationTypes = Object.freeze({
   CHAT_NEW_MESSAGE: "CHAT_NEW_MESSAGE",
   NEW_PATIENT_TODAY: "NEW_PATIENT_TODAY",
   SCHEDULE_CHANGED: "SCHEDULE_CHANGED",
+  WORK_SCHEDULE_ADDED: "WORK_SCHEDULE_ADDED",
 });
 
 export const doctorNotifications = {
@@ -40,18 +43,9 @@ export const doctorNotifications = {
   [DoctorNotificationTypes.APPOINTMENT_NO_SHOW]: (payload = {}) => {
     const { patientName } = payload;
     return {
-      title: "Consulta ausente",
+      title: "Paciente ausente",
       subtitle: `Paciente ${patientName} não compareceu a consulta.`,
       icon: "doctor-appointment-canceled",
-    };
-  },
-
-  [DoctorNotificationTypes.APPOINTMENT_REMINDER]: (payload = {}) => {
-    const { patientName, time } = payload;
-    return {
-      title: "Lembrete de consulta",
-      subtitle: `Sua próxima consulta é com ${patientName} às ${time}.`,
-      icon: "doctor-appointment-reminder",
     };
   },
 
@@ -74,11 +68,22 @@ export const doctorNotifications = {
   },
 
   [DoctorNotificationTypes.SCHEDULE_CHANGED]: (payload = {}) => {
-    const { patientName, time } = payload;
+    const { patientName, date, time } = payload;
+
+    const formattedDate = dayjs(date).format("DD/MM/YYYY");
+
     return {
       title: "Alteração na agenda",
-      subtitle: `Consulta de ${patientName} remarcada para ${time}.`,
+      subtitle: `Consulta de ${patientName} remarcada para ${formattedDate} às ${time}.`,
       icon: "doctor-schedule-changed",
+    };
+  },
+
+  [DoctorNotificationTypes.WORK_SCHEDULE_ADDED]: () => {
+    return {
+      title: "Horário de trabalho adicionado",
+      subtitle: "O admin definiu seu horário de trabalho.",
+      icon: "doctor-work-schedule",
     };
   },
 };

@@ -5,7 +5,7 @@ const create = async (data) => {
 
   const populated = await Appointment.findById(appointment._id)
     .populate("pacientName", "name")
-    .populate("hour", "hour");
+    .populate("hour", "date hour");
 
   return populated;
 };
@@ -32,12 +32,19 @@ const findByPacientId = async (pacientId) => {
   return appointments;
 };
 
+const findByDoctorId = async (doctorId) => {
+  const appointments = await Appointment.find({ doctor: doctorId })
+    .populate("pacientName", "name")
+    .populate("hour", "date hour");
+  return appointments;
+};
+
 const update = async (id, data) => {
   const updated = await Appointment.findByIdAndUpdate(id, data, {
     new: true,
   })
     .populate("pacientName", "name")
-    .populate("hour", "time");
+    .populate("hour", "hour date");
   return updated;
 };
 
@@ -46,5 +53,6 @@ export default {
   findAll,
   findById,
   findByPacientId,
+  findByDoctorId,
   update,
 };

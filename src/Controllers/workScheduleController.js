@@ -1,8 +1,18 @@
 import workScheduleService from "../service/workScheduleService.js";
+import { createNotification } from "../service/NotificationService.js";
+import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 
 export const createWorkSchedule = async (req, res) => {
   try {
     const created = await workScheduleService.create(req.body);
+
+    await createNotification(
+      "doctor",
+      DoctorNotificationTypes.WORK_SCHEDULE_ADDED,
+      created.funcionario,
+      "Employee"
+    );
+
     res.status(201).json(created);
   } catch (error) {
     if (error.status === 400) {

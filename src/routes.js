@@ -26,6 +26,7 @@ import {
   createAppointment,
   getAllAppointments,
   getAppointmentById,
+  getAppointmentsByDoctorId,
   getAppointmentsByPacientId,
   updateAppointment,
 } from "./Controllers/appointmentController.js";
@@ -212,6 +213,13 @@ router.get(
   authMiddleware,
   authorizeAppointmentAccess(),
   getAppointmentsByPacientId
+);
+
+router.get(
+  "/appointments/doctor/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getAppointmentsByDoctorId
 );
 
 router.patch(
