@@ -77,6 +77,13 @@ import {
   updateMedicalPrescription,
 } from "./Controllers/PrescriptionController.js";
 import {
+  createRequestExams,
+  getAllRequestExams,
+  getRequestExamsById,
+  getRequestExamsByPatientId,
+  markRequestExamsStatusAsCompleted,
+} from "./Controllers/requestExamsController.js";
+import {
   createThyroidFunction,
   getAllThyroidFunction,
   getThyroidFunctionById,
@@ -105,6 +112,10 @@ import {
   deleteMessage,
   getAvailableContacts,
 } from "./Controllers/ChatMessageController.js";
+import {
+  getUserNotifications,
+  markNotificationAsRead,
+} from "./Controllers/NotificationController.js";
 import authMiddleware from "./Middleware/authMiddleware.js";
 import validateRequest from "./Middleware/validateRequestMiddleware.js";
 import { authorizeSelfOrAdmin } from "./Middleware/authorizationMiddleware.js";
@@ -424,6 +435,42 @@ router.delete(
   deleteMedicalPrescription
 );
 
+//----Solicitação de exames----
+router.post(
+  "/exame-glicose",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  createRequestExams
+);
+
+router.get(
+  "/solicitar-exame",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getAllRequestExams
+);
+
+router.get(
+  "/solicitar-exame/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getRequestExamsById
+);
+
+router.get(
+  "/solicitar-exame/paciente/:id",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  getRequestExamsByPatientId
+);
+
+router.patch(
+  "/solicitar-exame/:id/finalizado",
+  authMiddleware,
+  authorizeAppointmentAccess(),
+  markRequestExamsStatusAsCompleted
+);
+
 //----Exame de tireoide----
 router.post(
   "/exame-tireoide",
@@ -544,5 +591,10 @@ router.get("/chat/conversation/:otherId", authMiddleware, getConversation);
 router.patch("/chat/messages/:id", authMiddleware, updateMessage);
 
 router.delete("/chat/messages/:id", authMiddleware, deleteMessage);
+
+//----Notificações----
+router.get("/notifications", authMiddleware, getUserNotifications);
+
+router.patch("/notifications/:id/read", authMiddleware, markNotificationAsRead);
 
 export default router;

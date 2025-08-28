@@ -1,11 +1,14 @@
 import * as ThyroidFunctionService from "../service/ThyroidFunctionService.js";
+import { createNotification } from "../service/NotificationService.js";
+import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 
 export const createThyroidFunction = async (req, res) => {
   try {
-    const ThyroidFunction = await ThyroidFunctionService.createThyroidFunction(
+    const thyroidFunction = await ThyroidFunctionService.createThyroidFunction(
       req.body
     );
-    res.status(201).json(ThyroidFunction);
+
+    res.status(201).json(thyroidFunction);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

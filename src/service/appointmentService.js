@@ -2,7 +2,12 @@ import { Appointment } from "../Model/AppointmentModel.js";
 
 const create = async (data) => {
   const appointment = await Appointment.create(data);
-  return appointment;
+
+  const populated = await Appointment.findById(appointment._id)
+    .populate("pacientName", "name")
+    .populate("hour", "hour");
+
+  return populated;
 };
 
 const findAll = async () => {
@@ -30,7 +35,9 @@ const findByPacientId = async (pacientId) => {
 const update = async (id, data) => {
   const updated = await Appointment.findByIdAndUpdate(id, data, {
     new: true,
-  });
+  })
+    .populate("pacientName", "name")
+    .populate("hour", "time");
   return updated;
 };
 

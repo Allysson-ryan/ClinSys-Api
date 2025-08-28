@@ -1,10 +1,13 @@
 import * as FastingGlucoseService from "../service/FastingGlucoseService.js";
+import { createNotification } from "../service/NotificationService.js";
+import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 
 export const createFastingGlucose = async (req, res) => {
   try {
-    const FastingGlucose =
+    const fastingGlucose =
       await FastingGlucoseService.createFastingGlucoseExame(req.body);
-    res.status(201).json(FastingGlucose);
+
+    res.status(201).json(fastingGlucose);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

@@ -1,10 +1,13 @@
 import * as CompleteBloodExameService from "../service/CompleteBloodExameService.js";
+import { createNotification } from "../service/NotificationService.js";
+import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 
 export const createCompleteBloodExame = async (req, res) => {
   try {
-    const CompleteBloodExame =
+    const completeBloodExame =
       await CompleteBloodExameService.createCompleteBlood(req.body);
-    res.status(201).json(CompleteBloodExame);
+
+    res.status(201).json(completeBloodExame);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

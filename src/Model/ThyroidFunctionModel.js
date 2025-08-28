@@ -15,10 +15,6 @@ const thyroidFunctionSchema = new mongoose.Schema(
     requestedAt: {
       type: Date,
     },
-    status: {
-      type: String,
-      default: true,
-    },
     collectedAt: {
       type: Date,
     },

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const fastingGlucoseSchema = new mongoose.Schema(
+const requestExameSchema = new mongoose.Schema(
   {
     patient: {
       type: mongoose.Schema.Types.ObjectId,
@@ -12,24 +12,17 @@ const fastingGlucoseSchema = new mongoose.Schema(
       ref: "Employee",
       required: true,
     },
-    requestedAt: {
-      type: Date,
-    },
-    collectedAt: {
-      type: Date,
-    },
-    glucoseLevel: {
-      type: Number,
-      required: true,
-    },
-    observation: {
+    examType: {
       type: String,
+      default: true,
+    },
+    status: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }
 );
 
-export const FastingGlucose = mongoose.model(
-  "FastingGlucose",
-  fastingGlucoseSchema
-);
+export const requestExame = mongoose.model("requestExame", requestExameSchema);
+export default requestExame;

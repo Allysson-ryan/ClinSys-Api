@@ -3,10 +3,18 @@ import { Employee } from "../Model/EmployeeModel.js";
 import mongoose from "mongoose";
 
 export const createMessage = async (data) => {
+  if (data.sender.toString() === data.receiver.toString()) {
+    throw new Error("Você não pode enviar mensagens para si mesmo.");
+  }
+
   const newMessage = await ChatMessage.create(data);
-  return newMessage
-    .populate("sender", "name role")
-    .populate("receiver", "name role");
+
+  await newMessage.populate([
+    { path: "sender", select: "name role" },
+    { path: "receiver", select: "name role" },
+  ]);
+
+  return newMessage;
 };
 
 export const getContactsByEmployee = async (employeeId) => {
