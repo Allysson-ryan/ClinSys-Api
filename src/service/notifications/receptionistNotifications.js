@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const ReceptionistNotificationTypes = Object.freeze({
   APPOINTMENT_CONFIRMED: "APPOINTMENT_CONFIRMED",
   APPOINTMENT_CANCELED: "APPOINTMENT_CANCELED",
@@ -12,28 +14,37 @@ export const ReceptionistNotificationTypes = Object.freeze({
 
 export const receptionistNotifications = {
   [ReceptionistNotificationTypes.APPOINTMENT_CONFIRMED]: (payload = {}) => {
-    const { doctorName, patientName, time } = payload;
+    const { doctorName, patientName, date } = payload;
+
+    const formattedDate = dayjs(date).format("DD/MM/YYYY");
+
     return {
       title: "Novo agendamento confirmado",
-      subtitle: `Consulta marcada com ${doctorName} para ${patientName} às ${time}.`,
+      subtitle: `A Consulta de ${patientName} com o(a) Dr(a) ${doctorName} no dia ${formattedDate} foi confirmada.`,
       icon: "reception-appointment-confirmed",
     };
   },
 
   [ReceptionistNotificationTypes.APPOINTMENT_CANCELED]: (payload = {}) => {
-    const { patientName } = payload;
+    const { patientName, doctorName, date } = payload;
+
+    const formattedDate = dayjs(date).format("DD/MM/YYYY");
+
     return {
       title: "Consulta cancelada",
-      subtitle: `Consulta de ${patientName} foi cancelada pelo paciente.`,
+      subtitle: `A consulta de ${patientName} com o(a) Dr(a) ${doctorName} do dia ${formattedDate} foi cancelada pelo paciente.`,
       icon: "reception-appointment-canceled",
     };
   },
 
   [ReceptionistNotificationTypes.APPOINTMENT_RESCHEDULED]: (payload = {}) => {
-    const { patientName, time } = payload;
+    const { patientName, doctorName, date, time } = payload;
+
+    const formattedDate = dayjs(date).format("DD/MM/YYYY");
+
     return {
       title: "Consulta reagendada",
-      subtitle: `Consulta de ${patientName} remarcada para ${time}.`,
+      subtitle: `Consulta de ${patientName} com o(a) Dr(a) ${doctorName} foi remarcada para ${formattedDate} às ${time}.`,
       icon: "reception-appointment-rescheduled",
     };
   },

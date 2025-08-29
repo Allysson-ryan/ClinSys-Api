@@ -74,7 +74,7 @@ export const doctorNotifications = {
 
     return {
       title: "Alteração na agenda",
-      subtitle: `Consulta de ${patientName} remarcada para ${formattedDate} às ${time}.`,
+      subtitle: `Consulta de ${patientName} foi remarcada para ${formattedDate} às ${time}.`,
       icon: "doctor-schedule-changed",
     };
   },

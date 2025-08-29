@@ -44,7 +44,8 @@ const update = async (id, data) => {
     new: true,
   })
     .populate("pacientName", "name")
-    .populate("hour", "hour date");
+    .populate("hour", "hour date")
+    .populate("doctor", "name role");
   return updated;
 };
 

@@ -1,6 +1,8 @@
 import appointmentService from "../service/appointmentService.js";
 import { createNotification } from "../service/NotificationService.js";
 import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
+import { ReceptionistNotificationTypes } from "../service/notifications/receptionistNotifications.js";
+import { Employee } from "../Model/EmployeeModel.js";
 import { todayBrazilYYYYMMDD } from "../utils/date.js";
 
 export const createAppointment = async (req, res, next) => {
@@ -85,6 +87,7 @@ export const getAppointmentsByDoctorId = async (req, res, next) => {
 };
 
 export const updateAppointment = async (req, res, next) => {
+  // ----------------- MAP DE NOTIFICAÇÕES PARA MÉDICO -----------------
   try {
     const updated = await appointmentService.update(req.params.id, req.body);
 
@@ -120,6 +123,55 @@ export const updateAppointment = async (req, res, next) => {
         updated.doctor,
         "Employee",
         notificationConfig.getPayload(updated)
+      );
+    }
+
+    // ----------------- MAP DE NOTIFICAÇÕES PARA RECEPCIONISTA -----------------
+    const receptionistStatusNotificationMap = {
+      Confirmada: {
+        type: ReceptionistNotificationTypes.APPOINTMENT_CONFIRMED,
+        getPayload: (appt) => ({
+          doctorName: updated.doctor.name,
+          patientName: appt.pacientName.name,
+          date: appt.hour.date,
+        }),
+      },
+      Cancelada: {
+        type: ReceptionistNotificationTypes.APPOINTMENT_CANCELED,
+        getPayload: (appt) => ({
+          doctorName: appt.doctor.name,
+          patientName: appt.pacientName.name,
+          date: appt.hour.date,
+        }),
+      },
+      Remarcado: {
+        type: ReceptionistNotificationTypes.APPOINTMENT_RESCHEDULED,
+        getPayload: (appt) => ({
+          doctorName: appt.doctor.name,
+          patientName: appt.pacientName.name,
+          date: appt.hour.date,
+          time: appt.hour?.hour,
+        }),
+      },
+    };
+
+    const receptionistConfig =
+      receptionistStatusNotificationMap[updated.status];
+    if (receptionistConfig) {
+      const receptionists = await Employee.find({
+        role: "Recepcionista",
+      }).select("_id");
+
+      await Promise.all(
+        receptionists.map((recep) =>
+          createNotification(
+            "receptionist",
+            receptionistConfig.type,
+            recep._id,
+            "Employee",
+            receptionistConfig.getPayload(updated)
+          )
+        )
       );
     }
 

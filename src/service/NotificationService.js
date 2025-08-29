@@ -1,4 +1,3 @@
-// src/service/NotificationService.js
 import Notification from "../Model/NotificacionModel.js";
 import { doctorNotifications } from "./notifications/doctorNotifications.js";
 import { receptionistNotifications } from "./notifications/receptionistNotifications.js";
