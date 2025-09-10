@@ -33,7 +33,7 @@ export const receptionistNotifications = {
     return {
       title: "Consulta cancelada",
       subtitle: `A consulta de ${patientName} com o(a) Dr(a) ${doctorName} do dia ${formattedDate} foi cancelada pelo paciente.`,
-      icon: "reception-appointment-canceled",
+      icon: "appointment-canceled",
     };
   },
 
@@ -44,8 +44,8 @@ export const receptionistNotifications = {
 
     return {
       title: "Consulta reagendada",
-      subtitle: `Consulta de ${patientName} com o(a) Dr(a) ${doctorName} foi remarcada para ${formattedDate} às ${time}.`,
-      icon: "reception-appointment-rescheduled",
+      subtitle: `Consulta de ${patientName} com o(a) ${doctorName} foi remarcada para ${formattedDate} às ${time}.`,
+      icon: "schedule-changed",
     };
   },
 
@@ -80,17 +80,8 @@ export const receptionistNotifications = {
     const { professionalName, start, end } = payload;
     return {
       title: "Ausência de profissional",
-      subtitle: `${professionalName} está ausente hoje – reagendar consultas das ${start} às ${end}.`,
+      subtitle: `${professionalName} está ausente hoje (${start}–${end}). Consultas do período serão canceladas automaticamente.`,
       icon: "reception-absence",
-    };
-  },
-
-  [ReceptionistNotificationTypes.PRICE_UPDATE]: (payload = {}) => {
-    const { professionalName, newPrice } = payload;
-    return {
-      title: "Atualização de valores",
-      subtitle: `Consulta com ${professionalName} agora custa R$ ${newPrice} – valores atualizados no sistema.`,
-      icon: "reception-price-update",
     };
   },
 
@@ -98,7 +89,7 @@ export const receptionistNotifications = {
     return {
       title: "Horário de trabalho adicionado",
       subtitle: "O admin definiu seu horário de trabalho.",
-      icon: "reception-work-schedule",
+      icon: "work-schedule",
     };
   },
 };

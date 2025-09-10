@@ -18,7 +18,7 @@ export const doctorNotifications = {
     return {
       title: "Novo exame solicitado",
       subtitle: `${examName} para ${patientName} foi solicitado com sucesso.`,
-      icon: "doctor-exam-requested",
+      icon: "exam-requested",
     };
   },
 
@@ -36,7 +36,7 @@ export const doctorNotifications = {
     return {
       title: "Consulta cancelada",
       subtitle: `Consulta de ${patientName} foi cancelada pelo paciente.`,
-      icon: "doctor-appointment-canceled",
+      icon: "appointment-canceled",
     };
   },
 
@@ -75,7 +75,7 @@ export const doctorNotifications = {
     return {
       title: "Alteração na agenda",
       subtitle: `Consulta de ${patientName} foi remarcada para ${formattedDate} às ${time}.`,
-      icon: "doctor-schedule-changed",
+      icon: "schedule-changed",
     };
   },
 
@@ -83,7 +83,7 @@ export const doctorNotifications = {
     return {
       title: "Horário de trabalho adicionado",
       subtitle: "O admin definiu seu horário de trabalho.",
-      icon: "doctor-work-schedule",
+      icon: "work-schedule",
     };
   },
 };

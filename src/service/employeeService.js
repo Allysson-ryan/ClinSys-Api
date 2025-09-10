@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Employee } from "../Model/EmployeeModel.js";
+import { WorkSchedule } from "../Model/workScheduleModel.js";
 import mongoose from "mongoose";
 
 const generateToken = (id, role) => {
@@ -108,5 +109,35 @@ export default {
     if (!mongoose.Types.ObjectId.isValid(id)) throw new Error("ID inválido.");
     const deleted = await Employee.findByIdAndDelete(id);
     if (!deleted) throw new Error("Funcionário não encontrado.");
+  },
+
+  async markAbsence(employeeId, scheduleId, reason) {
+    const schedule = await WorkSchedule.findOne({
+      _id: scheduleId,
+      funcionario: employeeId,
+    }).populate("funcionario", "name");
+
+    if (!schedule) throw new Error("Horário de trabalho não encontrado.");
+
+    schedule.status = "Ausente";
+    schedule.absenceReason = reason;
+    await schedule.save();
+
+    return schedule;
+  },
+
+  async markPresence(employeeId, scheduleId) {
+    const schedule = await WorkSchedule.findOne({
+      _id: scheduleId,
+      funcionario: employeeId,
+    }).populate("funcionario", "name");
+
+    if (!schedule) throw new Error("Horário de trabalho não encontrado.");
+
+    schedule.status = "Presente";
+    schedule.absenceReason = null;
+    await schedule.save();
+
+    return schedule;
   },
 };

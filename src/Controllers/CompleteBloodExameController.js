@@ -1,6 +1,4 @@
 import * as CompleteBloodExameService from "../service/CompleteBloodExameService.js";
-import { createNotification } from "../service/NotificationService.js";
-import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 
 export const createCompleteBloodExame = async (req, res) => {
   try {

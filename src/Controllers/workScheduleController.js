@@ -1,17 +1,31 @@
 import workScheduleService from "../service/workScheduleService.js";
 import { createNotification } from "../service/NotificationService.js";
 import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
+import { ReceptionistNotificationTypes } from "../service/notifications/receptionistNotifications.js";
 
 export const createWorkSchedule = async (req, res) => {
   try {
     const created = await workScheduleService.create(req.body);
 
-    await createNotification(
-      "doctor",
-      DoctorNotificationTypes.WORK_SCHEDULE_ADDED,
-      created.funcionario,
-      "Employee"
-    );
+    await created.populate("funcionario", "name position");
+
+    if (created.funcionario.position === "Médico") {
+      await createNotification(
+        "doctor",
+        DoctorNotificationTypes.WORK_SCHEDULE_ADDED,
+        created.funcionario._id,
+        "Employee"
+      );
+    }
+
+    if (created.funcionario.position === "Recepcionista") {
+      await createNotification(
+        "receptionist",
+        ReceptionistNotificationTypes.WORK_SCHEDULE_ADDED,
+        created.funcionario._id,
+        "Employee"
+      );
+    }
 
     res.status(201).json(created);
   } catch (error) {

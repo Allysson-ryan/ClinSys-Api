@@ -1,24 +1,45 @@
 import * as ChatMessageService from "../service/ChatMessageService.js";
 import { createNotification } from "../service/NotificationService.js";
 import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
+import { ReceptionistNotificationTypes } from "../service/notifications/receptionistNotifications.js";
+import { Employee } from "../Model/EmployeeModel.js";
 
 export const createMessage = async (req, res) => {
   try {
     const { id: employeeId } = req.user;
+
     const message = await ChatMessageService.createMessage({
       ...req.body,
       sender: employeeId,
     });
 
-    await createNotification(
-      "doctor",
-      DoctorNotificationTypes.CHAT_NEW_MESSAGE,
-      message.sender,
-      "Employee",
-      {
-        fromName: message.receiver.name,
-      }
-    );
+    const receiver = await Employee.findById(message.receiver).lean();
+    if (!receiver) {
+      return res.status(404).json({ message: "Receiver não encontrado" });
+    }
+
+    const sectorMap = {
+      Médico: "doctor",
+      Recepcionista: "receptionist",
+    };
+
+    const sector = sectorMap[receiver.role];
+    if (!sector) {
+      return res
+        .status(400)
+        .json({ message: `Setor não mapeado para ${receiver.role}` });
+    }
+
+    const typeMap = {
+      doctor: DoctorNotificationTypes.CHAT_NEW_MESSAGE,
+      receptionist: ReceptionistNotificationTypes.CHAT_NEW_MESSAGE,
+    };
+
+    const type = typeMap[sector];
+
+    await createNotification(sector, type, message.receiver, "Employee", {
+      fromName: message.sender.name,
+    });
 
     res.status(201).json(message);
   } catch (error) {

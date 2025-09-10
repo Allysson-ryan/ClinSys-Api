@@ -19,9 +19,14 @@ const workScheduleSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    ativo: {
-      type: Boolean,
-      default: true,
+    status: {
+      type: String,
+      enum: ["Presente", "Ausente"],
+      default: "Presente",
+    },
+    absenceReason: {
+      type: String,
+      default: null,
     },
   },
   {

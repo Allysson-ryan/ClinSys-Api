@@ -28,16 +28,23 @@ export const getRequestExamsByPatientId = async (patientId) => {
     .populate("requestedBy", "name role crmNumber");
 };
 
-export const markRequestExamsStatusAsCompleted = async (id) => {
+export const updateRequestExamStatus = async (id, status) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error("ID inválido");
   }
 
+  const allowedStatuses = ["Finalizado", "Entregue"];
+  if (!allowedStatuses.includes(status)) {
+    throw new Error("Status inválido para exame");
+  }
+
   const updatedRequestExams = await RequestExams.findByIdAndUpdate(
     id,
-    { status: "Finalizado" },
+    { status },
     { new: true }
-  );
+  )
+    .populate("patient", "name")
+    .populate("requestedBy", "name");
 
   if (!updatedRequestExams) {
     throw new Error("Solicitação de exame não encontrada");

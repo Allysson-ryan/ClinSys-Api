@@ -1,10 +1,9 @@
 export function authorizeSelfOrAdmin(targetType) {
   return (req, res, next) => {
     const { id: userId, type } = req.user;
-    const targetId = req.params.id;
-
+    const targetId = req.params.id || req.body.employeeId || userId;
     const isAdmin = type === "admin";
-    const isSameUser = userId === targetId;
+    const isSameUser = userId.toString() === targetId.toString();
     const isSameType = type === targetType;
 
     if (isAdmin && ["admin", "employee"].includes(targetType)) {

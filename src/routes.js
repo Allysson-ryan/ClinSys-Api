@@ -14,6 +14,8 @@ import {
   getEmployeeById,
   updateEmployee,
   deleteEmployee,
+  markEmployeeAbsence,
+  markEmployeePresence,
 } from "./Controllers/employeeController.js";
 import {
   registerAdmin,
@@ -82,7 +84,7 @@ import {
   getAllRequestExams,
   getRequestExamsById,
   getRequestExamsByPatientId,
-  markRequestExamsStatusAsCompleted,
+  updateRequestExamsStatus,
 } from "./Controllers/requestExamsController.js";
 import {
   createThyroidFunction,
@@ -184,6 +186,20 @@ router.delete(
   authMiddleware,
   authorizeSelfOrAdmin("employee"),
   deleteEmployee
+);
+
+router.post(
+  "/funcionario/ausencia",
+  authMiddleware,
+  authorizeSelfOrAdmin("employee"),
+  markEmployeeAbsence
+);
+
+router.post(
+  "/funcionario/presenca",
+  authMiddleware,
+  authorizeSelfOrAdmin("employee"),
+  markEmployeePresence
 );
 
 //----Marcar Consultas----
@@ -445,7 +461,7 @@ router.delete(
 
 //----Solicitação de exames----
 router.post(
-  "/exame-glicose",
+  "/solicitar-exame",
   authMiddleware,
   authorizeAppointmentAccess(),
   createRequestExams
@@ -473,10 +489,10 @@ router.get(
 );
 
 router.patch(
-  "/solicitar-exame/:id/finalizado",
+  "/solicitar-exame/:id/status",
   authMiddleware,
   authorizeAppointmentAccess(),
-  markRequestExamsStatusAsCompleted
+  updateRequestExamsStatus
 );
 
 //----Exame de tireoide----

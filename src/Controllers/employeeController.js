@@ -1,4 +1,7 @@
 import employeeAuthService from "../service/employeeService.js";
+import { createNotification } from "../service/NotificationService.js";
+import { ReceptionistNotificationTypes } from "../service/notifications/receptionistNotifications.js";
+import { Employee } from "../Model/EmployeeModel.js";
 
 export const registerEmployee = async (req, res, next) => {
   try {
@@ -51,5 +54,70 @@ export const deleteEmployee = async (req, res, next) => {
     res.status(204).send();
   } catch (error) {
     next(error);
+  }
+};
+
+export const markEmployeeAbsence = async (req, res) => {
+  try {
+    const employeeId = req.user.id;
+    const { scheduleId, reason } = req.body;
+
+    const schedule = await employeeAuthService.markAbsence(
+      employeeId,
+      scheduleId,
+      reason
+    );
+
+    const receptionists = await Employee.find({
+      $or: [{ role: "Recepcionista" }, { position: "Recepcionista" }],
+    }).select("_id");
+
+    await Promise.all(
+      receptionists.map((recep) =>
+        createNotification(
+          "receptionist",
+          ReceptionistNotificationTypes.PROFESSIONAL_ABSENCE,
+          recep._id,
+          "Employee",
+          {
+            professionalName: schedule.funcionario.name,
+            start: schedule.horaInicio,
+            end: schedule.horaFim,
+          }
+        )
+      )
+    );
+
+    return res.status(200).json({
+      message: "Ausência registrada e notificação enviada com sucesso.",
+      schedule,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Erro ao registrar ausência.",
+      error: error.message,
+    });
+  }
+};
+
+export const markEmployeePresence = async (req, res) => {
+  try {
+    const employeeId = req.user.id;
+    const { scheduleId } = req.body;
+
+    const schedule = await employeeAuthService.markPresence(
+      employeeId,
+      scheduleId
+    );
+
+    return res.status(200).json({
+      message: "Presença registrada com sucesso.",
+      schedule,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Erro ao registrar presença.",
+      error: error.message,
+    });
   }
 };
