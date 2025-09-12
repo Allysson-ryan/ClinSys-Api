@@ -2,6 +2,7 @@ import workScheduleService from "../service/workScheduleService.js";
 import { createNotification } from "../service/NotificationService.js";
 import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 import { ReceptionistNotificationTypes } from "../service/notifications/receptionistNotifications.js";
+import { nursingNotificationTypes } from "../service/notifications/nursingNotification.js";
 
 export const createWorkSchedule = async (req, res) => {
   try {
@@ -14,7 +15,12 @@ export const createWorkSchedule = async (req, res) => {
         "doctor",
         DoctorNotificationTypes.WORK_SCHEDULE_ADDED,
         created.funcionario._id,
-        "Employee"
+        "Employee",
+        {
+          workday: created.diaSemana,
+          startTime: created.horaInicio,
+          endTime: created.horaFim,
+        }
       );
     }
 
@@ -23,7 +29,26 @@ export const createWorkSchedule = async (req, res) => {
         "receptionist",
         ReceptionistNotificationTypes.WORK_SCHEDULE_ADDED,
         created.funcionario._id,
-        "Employee"
+        "Employee",
+        {
+          workday: created.diaSemana,
+          startTime: created.horaInicio,
+          endTime: created.horaFim,
+        }
+      );
+    }
+
+    if (created.funcionario.position === "Enfermeiro") {
+      await createNotification(
+        "nurse",
+        nursingNotificationTypes.WORK_SCHEDULE_ADDED,
+        created.funcionario._id,
+        "Employee",
+        {
+          workday: created.diaSemana,
+          startTime: created.horaInicio,
+          endTime: created.horaFim,
+        }
       );
     }
 

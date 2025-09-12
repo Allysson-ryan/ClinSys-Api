@@ -12,41 +12,62 @@ export const ReceptionistNotificationTypes = Object.freeze({
   WORK_SCHEDULE_ADDED: "WORK_SCHEDULE_ADDED",
 });
 
+function getLabels({ type, professionalName, patientName, date, time }) {
+  const formattedDate = dayjs(date).format("DD/MM/YYYY");
+
+  if (type === "vacina") {
+    return {
+      confirmed: {
+        title: "Novo agendamento confirmado",
+        subtitle: `A Vacinação de ${patientName} com o(a) Enfermeiro(a) ${professionalName} no dia ${formattedDate} foi confirmada.`,
+        icon: "reception-vaccine-confirmed",
+      },
+      canceled: {
+        title: "Vacinação cancelada",
+        subtitle: `A vacinação de ${patientName} com o(a) Enfermeiro(a) ${professionalName} do dia ${formattedDate} foi cancelada pelo paciente.`,
+        icon: "reception-vaccine-canceled",
+      },
+      rescheduled: {
+        title: "Vacinação reagendada",
+        subtitle: `Vacinação de ${patientName} com o(a) Enfermeiro(a) ${professionalName} foi remarcada para ${formattedDate} às ${time}.`,
+        icon: "reception-vaccine-rescheduled",
+      },
+    };
+  }
+
+  return {
+    confirmed: {
+      title: "Novo agendamento confirmado",
+      subtitle: `A Consulta de ${patientName} com o(a) Dr(a) ${professionalName} no dia ${formattedDate} foi confirmada.`,
+      icon: "reception-appointment-confirmed",
+    },
+    canceled: {
+      title: "Consulta cancelada",
+      subtitle: `A consulta de ${patientName} com o(a) Dr(a) ${professionalName} do dia ${formattedDate} foi cancelada pelo paciente.`,
+      icon: "appointment-canceled",
+    },
+    rescheduled: {
+      title: "Consulta reagendada",
+      subtitle: `Consulta de ${patientName} com o(a) Dr(a) ${professionalName} foi remarcada para ${formattedDate} às ${time}.`,
+      icon: "schedule-changed",
+    },
+  };
+}
+
 export const receptionistNotifications = {
   [ReceptionistNotificationTypes.APPOINTMENT_CONFIRMED]: (payload = {}) => {
-    const { doctorName, patientName, date } = payload;
-
-    const formattedDate = dayjs(date).format("DD/MM/YYYY");
-
-    return {
-      title: "Novo agendamento confirmado",
-      subtitle: `A Consulta de ${patientName} com o(a) Dr(a) ${doctorName} no dia ${formattedDate} foi confirmada.`,
-      icon: "reception-appointment-confirmed",
-    };
+    const labels = getLabels(payload);
+    return labels.confirmed;
   },
 
   [ReceptionistNotificationTypes.APPOINTMENT_CANCELED]: (payload = {}) => {
-    const { patientName, doctorName, date } = payload;
-
-    const formattedDate = dayjs(date).format("DD/MM/YYYY");
-
-    return {
-      title: "Consulta cancelada",
-      subtitle: `A consulta de ${patientName} com o(a) Dr(a) ${doctorName} do dia ${formattedDate} foi cancelada pelo paciente.`,
-      icon: "appointment-canceled",
-    };
+    const labels = getLabels(payload);
+    return labels.canceled;
   },
 
   [ReceptionistNotificationTypes.APPOINTMENT_RESCHEDULED]: (payload = {}) => {
-    const { patientName, doctorName, date, time } = payload;
-
-    const formattedDate = dayjs(date).format("DD/MM/YYYY");
-
-    return {
-      title: "Consulta reagendada",
-      subtitle: `Consulta de ${patientName} com o(a) ${doctorName} foi remarcada para ${formattedDate} às ${time}.`,
-      icon: "schedule-changed",
-    };
+    const labels = getLabels(payload);
+    return labels.rescheduled;
   },
 
   [ReceptionistNotificationTypes.EXAM_DELIVERED]: (payload = {}) => {
@@ -85,10 +106,14 @@ export const receptionistNotifications = {
     };
   },
 
-  [ReceptionistNotificationTypes.WORK_SCHEDULE_ADDED]: () => {
+  [ReceptionistNotificationTypes.WORK_SCHEDULE_ADDED]: (payload = {}) => {
+    const { workday, startTime, endTime } = payload;
+
+    const formattedDate = dayjs(workday).format("DD/MM/YYYY");
+
     return {
       title: "Horário de trabalho adicionado",
-      subtitle: "O admin definiu seu horário de trabalho.",
+      subtitle: `O admin definiu seu horário de trabalho - dia ${formattedDate}, das ${startTime} até ${endTime}..`,
       icon: "work-schedule",
     };
   },

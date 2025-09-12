@@ -79,10 +79,14 @@ export const doctorNotifications = {
     };
   },
 
-  [DoctorNotificationTypes.WORK_SCHEDULE_ADDED]: () => {
+  [DoctorNotificationTypes.WORK_SCHEDULE_ADDED]: (payload = {}) => {
+    const { workday, startTime, endTime } = payload;
+
+    const formattedDate = dayjs(workday).format("DD/MM/YYYY");
+
     return {
       title: "Horário de trabalho adicionado",
-      subtitle: "O admin definiu seu horário de trabalho.",
+      subtitle: `O admin definiu seu horário de trabalho - dia ${formattedDate}, das ${startTime} até ${endTime}.`,
       icon: "work-schedule",
     };
   },

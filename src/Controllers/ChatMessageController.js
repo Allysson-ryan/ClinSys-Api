@@ -3,6 +3,7 @@ import { createNotification } from "../service/NotificationService.js";
 import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 import { ReceptionistNotificationTypes } from "../service/notifications/receptionistNotifications.js";
 import { Employee } from "../Model/EmployeeModel.js";
+import { nursingNotificationTypes } from "../service/notifications/nursingNotification.js";
 
 export const createMessage = async (req, res) => {
   try {
@@ -21,18 +22,20 @@ export const createMessage = async (req, res) => {
     const sectorMap = {
       Médico: "doctor",
       Recepcionista: "receptionist",
+      Enfermeiro: "nurse",
     };
 
-    const sector = sectorMap[receiver.role];
+    const sector = sectorMap[receiver.position];
     if (!sector) {
       return res
         .status(400)
-        .json({ message: `Setor não mapeado para ${receiver.role}` });
+        .json({ message: `Setor não mapeado para ${receiver.position}` });
     }
 
     const typeMap = {
       doctor: DoctorNotificationTypes.CHAT_NEW_MESSAGE,
       receptionist: ReceptionistNotificationTypes.CHAT_NEW_MESSAGE,
+      nurse: nursingNotificationTypes.CHAT_NEW_MESSAGE,
     };
 
     const type = typeMap[sector];

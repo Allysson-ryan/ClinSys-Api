@@ -39,15 +39,6 @@ export const nursingNotifications = {
     };
   },
 
-  [nursingNotificationTypes.NEW_PATIENT_TODAY]: (payload = {}) => {
-    const { patientName, time } = payload;
-    return {
-      title: "Novo paciente no dia",
-      subtitle: `Paciente ${patientName} foi adicionado à sua lista de atendimentos para hoje – ${time}.`,
-      icon: "nursing-new-patient",
-    };
-  },
-
   [nursingNotificationTypes.SCHEDULE_CHANGED]: (payload = {}) => {
     const { patientName, date, time } = payload;
 
@@ -60,6 +51,15 @@ export const nursingNotifications = {
     };
   },
 
+  [nursingNotificationTypes.NEW_PATIENT_TODAY]: (payload = {}) => {
+    const { patientName, time } = payload;
+    return {
+      title: "Novo paciente no dia",
+      subtitle: `Paciente ${patientName} foi adicionado à sua lista de atendimentos para hoje – ${time}.`,
+      icon: "nursing-new-patient",
+    };
+  },
+
   [nursingNotificationTypes.CHAT_NEW_MESSAGE]: (payload = {}) => {
     const { fromName } = payload;
     return {
@@ -69,10 +69,14 @@ export const nursingNotifications = {
     };
   },
 
-  [nursingNotificationTypes.WORK_SCHEDULE_ADDED]: () => {
+  [nursingNotificationTypes.WORK_SCHEDULE_ADDED]: (payload = {}) => {
+    const { workday, startTime, endTime } = payload;
+
+    const formattedDate = dayjs(workday).format("DD/MM/YYYY");
+
     return {
       title: "Horário de trabalho adicionado",
-      subtitle: "O admin definiu seu horário de trabalho.",
+      subtitle: `O admin definiu seu horário de trabalho - dia ${formattedDate}, das ${startTime} até ${endTime}.`,
       icon: "work-schedule",
     };
   },
