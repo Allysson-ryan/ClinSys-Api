@@ -224,6 +224,16 @@ export const updateAppointment = async (req, res, next) => {
           type: emp.position === "Médico" ? "consulta" : "vacina",
         }),
       },
+      Finalizado: {
+        type: (emp) =>
+          emp.position === "Médico"
+            ? ReceptionistNotificationTypes.APPOINTMENT_FINISHED
+            : ReceptionistNotificationTypes.VACCINE_FINISHED,
+        getPayload: (appt, emp) => ({
+          professionalName: emp.name,
+          patientName: appt.pacientName.name,
+        }),
+      },
     };
 
     const receptionistConfig =
@@ -238,7 +248,9 @@ export const updateAppointment = async (req, res, next) => {
         receptionists.map((recep) =>
           createNotification(
             "receptionist",
-            receptionistConfig.type,
+            typeof receptionistConfig.type === "function"
+              ? receptionistConfig.type(employee)
+              : receptionistConfig.type,
             recep._id,
             "Employee",
             receptionistConfig.getPayload(updated, employee)

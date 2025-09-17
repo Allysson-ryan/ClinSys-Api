@@ -4,11 +4,13 @@ export const ReceptionistNotificationTypes = Object.freeze({
   APPOINTMENT_CONFIRMED: "APPOINTMENT_CONFIRMED",
   APPOINTMENT_CANCELED: "APPOINTMENT_CANCELED",
   APPOINTMENT_RESCHEDULED: "APPOINTMENT_RESCHEDULED",
+  APPOINTMENT_FINISHED: "APPOINTMENT_FINISHED",
+  VACCINE_FINISHED: "VACCINE_FINISHED",
+  PAYMENT_MADE: "PAYMENT_MADE",
   EXAM_DELIVERED: "EXAM_DELIVERED",
   EXAM_READY_FOR_PICKUP: "EXAM_READY_FOR_PICKUP",
   CHAT_NEW_MESSAGE: "CHAT_NEW_MESSAGE",
   PROFESSIONAL_ABSENCE: "PROFESSIONAL_ABSENCE",
-  PRICE_UPDATE: "PRICE_UPDATE",
   WORK_SCHEDULE_ADDED: "WORK_SCHEDULE_ADDED",
 });
 
@@ -113,8 +115,46 @@ export const receptionistNotifications = {
 
     return {
       title: "Horário de trabalho adicionado",
-      subtitle: `O admin definiu seu horário de trabalho - dia ${formattedDate}, das ${startTime} até ${endTime}..`,
+      subtitle: `O admin definiu seu horário de trabalho - dia ${formattedDate}, das ${startTime} até ${endTime}.`,
       icon: "work-schedule",
+    };
+  },
+
+  [ReceptionistNotificationTypes.PAYMENT_MADE]: (payload = {}) => {
+    const { type, pacientName, professionalName, price } = payload;
+
+    if (type === "consulta") {
+      return {
+        title: "Pagamanto Realizado",
+        subtitle: `Consulta do paciente ${pacientName} com Dr(a). ${professionalName} foi realizado o pagamento - valor: ${price}.`,
+        icon: "price-consultation",
+      };
+    }
+
+    if (type === "vacina") {
+      return {
+        title: "Pagamanto Realizado",
+        subtitle: `Vacinação do paciente ${pacientName} com Enfermeiro(a). ${professionalName} foi realizado o pagamento - valor: ${price}.`,
+        icon: "price-consultation",
+      };
+    }
+  },
+
+  [ReceptionistNotificationTypes.APPOINTMENT_FINISHED]: (payload = {}) => {
+    const { patientName, professionalName } = payload;
+    return {
+      title: "Consulta finalizada",
+      subtitle: `A consulta de ${patientName} com o(a) Dr(a). ${professionalName} foi finalizada.`,
+      icon: "appointment-finished",
+    };
+  },
+
+  [ReceptionistNotificationTypes.VACCINE_FINISHED]: (payload = {}) => {
+    const { patientName, professionalName } = payload;
+    return {
+      title: "Vacinação finalizada",
+      subtitle: `A vacinação de ${patientName} com o(a) Enfermeiro(a). ${professionalName} foi finalizada.`,
+      icon: "vaccine-finished",
     };
   },
 };

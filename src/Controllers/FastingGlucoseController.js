@@ -1,6 +1,4 @@
 import * as FastingGlucoseService from "../service/FastingGlucoseService.js";
-import { createNotification } from "../service/NotificationService.js";
-import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 
 export const createFastingGlucose = async (req, res) => {
   try {

@@ -116,6 +116,11 @@ import {
   getAvailableContacts,
 } from "./Controllers/ChatMessageController.js";
 import {
+  createPayment,
+  getAllPayments,
+  getPaymentById,
+} from "./Controllers/paymenAppointmentController.js";
+import {
   getUserNotifications,
   markNotificationAsRead,
 } from "./Controllers/NotificationController.js";
@@ -266,6 +271,18 @@ router.delete(
   authorizeSelfOrAdmin("admin"),
   deleteAvailableHour
 );
+
+//----Pagamento de consulta----
+router.post(
+  "/payments",
+  authMiddleware,
+  authorizeSelfOrAdmin("employee"),
+  createPayment
+);
+
+router.get("/payments", authMiddleware, getAllPayments);
+
+router.get("/payments/:id", authMiddleware, getPaymentById);
 
 //----Cronograma de trabalho----
 router.post(

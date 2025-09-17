@@ -32,6 +32,10 @@ const AppointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    paymentStatus: {
+      type: String,
+      default: "Pendente",
+    },
   },
   { timestamps: true }
 );
