@@ -3,6 +3,7 @@ import { createNotification } from "../service/NotificationService.js";
 import { DoctorNotificationTypes } from "../service/notifications/doctorNotifications.js";
 import { ReceptionistNotificationTypes } from "../service/notifications/receptionistNotifications.js";
 import { nursingNotificationTypes } from "../service/notifications/nursingNotification.js";
+import { laboratoryNotificationTypes } from "../service/notifications/laboratoryNotifications.js";
 
 export const createWorkSchedule = async (req, res) => {
   try {
@@ -42,6 +43,20 @@ export const createWorkSchedule = async (req, res) => {
       await createNotification(
         "nurse",
         nursingNotificationTypes.WORK_SCHEDULE_ADDED,
+        created.funcionario._id,
+        "Employee",
+        {
+          workday: created.diaSemana,
+          startTime: created.horaInicio,
+          endTime: created.horaFim,
+        }
+      );
+    }
+
+    if (created.funcionario.position === "Laboratório") {
+      await createNotification(
+        "laboratory",
+        laboratoryNotificationTypes.WORK_SCHEDULE_ADDED,
         created.funcionario._id,
         "Employee",
         {

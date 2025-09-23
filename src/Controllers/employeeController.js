@@ -48,6 +48,28 @@ export const updateEmployee = async (req, res, next) => {
   }
 };
 
+export const updateEmployeeStatus = async (req, res, next) => {
+  try {
+    if (req.user.type !== "admin") {
+      return res
+        .status(403)
+        .json({ error: "Apenas administradores podem mudar o status." });
+    }
+
+    const { status } = req.body;
+    if (!["Aceito", "Não aceito"].includes(status)) {
+      return res
+        .status(400)
+        .json({ error: "Status inválido. Use 'Aceito' ou 'Não aceito'." });
+    }
+
+    const updated = await employeeAuthService.update(req.params.id, { status });
+    res.status(200).json(updated);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const deleteEmployee = async (req, res, next) => {
   try {
     await employeeAuthService.remove(req.params.id);

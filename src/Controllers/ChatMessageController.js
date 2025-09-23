@@ -4,6 +4,7 @@ import { DoctorNotificationTypes } from "../service/notifications/doctorNotifica
 import { ReceptionistNotificationTypes } from "../service/notifications/receptionistNotifications.js";
 import { Employee } from "../Model/EmployeeModel.js";
 import { nursingNotificationTypes } from "../service/notifications/nursingNotification.js";
+import { laboratoryNotificationTypes } from "../service/notifications/laboratoryNotifications.js";
 
 export const createMessage = async (req, res) => {
   try {
@@ -23,6 +24,7 @@ export const createMessage = async (req, res) => {
       Médico: "doctor",
       Recepcionista: "receptionist",
       Enfermeiro: "nurse",
+      Laboratório: "laboratory",
     };
 
     const sector = sectorMap[receiver.position];
@@ -36,6 +38,7 @@ export const createMessage = async (req, res) => {
       doctor: DoctorNotificationTypes.CHAT_NEW_MESSAGE,
       receptionist: ReceptionistNotificationTypes.CHAT_NEW_MESSAGE,
       nurse: nursingNotificationTypes.CHAT_NEW_MESSAGE,
+      laboratory: laboratoryNotificationTypes.CHAT_NEW_MESSAGE,
     };
 
     const type = typeMap[sector];

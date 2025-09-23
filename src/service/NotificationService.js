@@ -3,11 +3,13 @@ import { doctorNotifications } from "./notifications/doctorNotifications.js";
 import { receptionistNotifications } from "./notifications/receptionistNotifications.js";
 import { Pacient } from "../Model/PatientModel.js";
 import { nursingNotifications } from "./notifications/nursingNotification.js";
+import { laboratoryNotifications } from "./notifications/laboratoryNotifications.js";
 
 const notificationCatalog = {
   doctor: doctorNotifications,
   receptionist: receptionistNotifications,
   nurse: nursingNotifications,
+  laboratory: laboratoryNotifications,
 };
 
 async function resolvePatientName(payload) {

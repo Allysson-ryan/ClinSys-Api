@@ -61,6 +61,12 @@ export default {
     const employee = await Employee.findOne({ email }).select("+password");
     if (!employee) throw new Error("Funcionário não encontrado.");
 
+    if (employee.status !== "Aceito") {
+      throw new Error(
+        "Acesso negado. Seu cadastro ainda não foi aprovado pelo administrador."
+      );
+    }
+
     const isPasswordValid = await bcrypt.compare(password, employee.password);
     if (!isPasswordValid) throw new Error("Senha incorreta.");
 

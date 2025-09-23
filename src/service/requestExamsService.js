@@ -33,7 +33,7 @@ export const updateRequestExamStatus = async (id, status) => {
     throw new Error("ID inválido");
   }
 
-  const allowedStatuses = ["Finalizado", "Entregue"];
+  const allowedStatuses = ["Solicitado", "Coletado", "Finalizado", "Entregue"];
   if (!allowedStatuses.includes(status)) {
     throw new Error("Status inválido para exame");
   }

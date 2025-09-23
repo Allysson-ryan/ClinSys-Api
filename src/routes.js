@@ -13,6 +13,7 @@ import {
   getAllEmployees,
   getEmployeeById,
   updateEmployee,
+  updateEmployeeStatus,
   deleteEmployee,
   markEmployeeAbsence,
   markEmployeePresence,
@@ -185,6 +186,12 @@ router.patch(
   authMiddleware,
   authorizeSelfOrAdmin("employee"),
   updateEmployee
+);
+router.patch(
+  "/funcionario/:id/status",
+  authMiddleware,
+  authorizeSelfOrAdmin("admin"),
+  updateEmployeeStatus
 );
 router.delete(
   "/funcionario/:id",

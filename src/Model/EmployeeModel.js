@@ -30,6 +30,7 @@ const EmployeeSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
+      default: "Não aceito",
     },
     password: {
       type: String,

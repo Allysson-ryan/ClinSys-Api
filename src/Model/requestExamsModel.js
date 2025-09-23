@@ -16,9 +16,14 @@ const requestExameSchema = new mongoose.Schema(
       type: String,
       default: true,
     },
+    priorityLevel: {
+      type: String,
+      default: true,
+    },
     status: {
       type: String,
       required: true,
+      default: "Solicitado",
     },
   },
   { timestamps: true }

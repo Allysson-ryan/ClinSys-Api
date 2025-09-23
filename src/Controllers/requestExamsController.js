@@ -4,6 +4,7 @@ import { DoctorNotificationTypes } from "../service/notifications/doctorNotifica
 import { ReceptionistNotificationTypes } from "../service/notifications/receptionistNotifications.js";
 import { Employee } from "../Model/EmployeeModel.js";
 import { nursingNotificationTypes } from "../service/notifications/nursingNotification.js";
+import { laboratoryNotificationTypes } from "../service/notifications/laboratoryNotifications.js";
 
 export const createRequestExams = async (req, res) => {
   try {
@@ -119,6 +120,28 @@ export const updateRequestExamsStatus = async (req, res) => {
     const updatedRequestExams =
       await RequestExamsService.updateRequestExamStatus(id, status);
 
+    if (status === "Coletado") {
+      const labs = await Employee.find({ position: "Laboratório" }).select(
+        "_id"
+      );
+
+      await Promise.all(
+        labs.map((lab) =>
+          createNotification(
+            "laboratory",
+            laboratoryNotificationTypes.EXAM_REQUESTED,
+            lab._id,
+            "Employee",
+            {
+              doctorName: updatedRequestExams.requestedBy.name,
+              examName: updatedRequestExams.examType,
+              patientName: updatedRequestExams.patient.name,
+            }
+          )
+        )
+      );
+    }
+
     if (status === "Finalizado") {
       await createNotification(
         "doctor",
@@ -144,6 +167,25 @@ export const updateRequestExamsStatus = async (req, res) => {
             "Employee",
             {
               examName: updatedRequestExams.examType,
+              patientName: updatedRequestExams.patient.name,
+            }
+          )
+        )
+      );
+
+      const labs = await Employee.find({ position: "Laboratório" }).select(
+        "_id"
+      );
+
+      await Promise.all(
+        labs.map((lab) =>
+          createNotification(
+            "laboratory",
+            laboratoryNotificationTypes.EXAM_SUBMITTED,
+            lab._id,
+            "Employee",
+            {
+              examType: updatedRequestExams.examType,
               patientName: updatedRequestExams.patient.name,
             }
           )
