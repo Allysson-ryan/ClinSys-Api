@@ -113,10 +113,10 @@ A API foi organizada por módulos, com rotas RESTful para:
 
 ```bash
 # Clone este repositório
-git clone https://github.com/seu-usuario/clinsys-backend.git
+git clone https://github.com/Allysson-ryan/ClinSys-Api
 
 # Acesse a pasta
-cd clinsys-backend
+cd ClinSys-Api
 
 # Instale as dependências
 npm install
